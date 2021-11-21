@@ -6,61 +6,75 @@ import (
 )
 
 func setKeys(session *core.Session) {
-    tui.table.SetInputCapture(func(event *tcell.EventKey) *tcell.EventKey {
+    tui.torrentList.SetInputCapture(func(event *tcell.EventKey) *tcell.EventKey {
         switch event.Rune() {
         case 'q':
             tui.app.Stop()
             return nil
 
         case 'p':
-            core.PauseStartTorrent(tui.table, name, session)
+            core.PauseStartTorrent(tui.torrentList, name, session)
             updateTable(session)
             return nil
 
         case 'r':
-            core.RemoveTorrent(tui.table, name, session, false)
+            core.RemoveTorrent(tui.torrentList, name, session, false)
             return nil
 
         case 'R':
-            core.RemoveTorrent(tui.table, name, session, true)
+            core.RemoveTorrent(tui.torrentList, name, session, true)
             return nil
 
         case 'v':
-            core.VerifyTorrent(tui.table, name, session)
+            core.VerifyTorrent(tui.torrentList, name, session)
             updateTable(session)
             return nil
 
         case 'g':
-            tui.table.Select(1, 0)
+            tui.torrentList.Select(1, 0)
             return nil
 
         case 'G':
-            rows := tui.table.GetRowCount()
-            tui.table.Select(rows - 1, 0)
+            rows := tui.torrentList.GetRowCount()
+            tui.torrentList.Select(rows - 1, 0)
             return nil
 
         case 'K':
-            newRow := core.QueueMove("up", tui.table, name, session)
+            newRow := core.QueueMove("up", tui.torrentList, name, session)
             updateTable(session)
-            tui.table.Select(newRow, 0)
+            tui.torrentList.Select(newRow, 0)
             return nil
 
         case 'J':
-            newRow := core.QueueMove("down", tui.table, name, session)
+            newRow := core.QueueMove("down", tui.torrentList, name, session)
             updateTable(session)
-            tui.table.Select(newRow, 0)
+            tui.torrentList.Select(newRow, 0)
             return nil
 
         case 'U':
-            newRow := core.QueueMove("top", tui.table, name, session)
+            newRow := core.QueueMove("top", tui.torrentList, name, session)
             updateTable(session)
-            tui.table.Select(newRow, 0)
+            tui.torrentList.Select(newRow, 0)
             return nil
 
         case 'D':
-            newRow := core.QueueMove("bottom", tui.table, name, session)
+            newRow := core.QueueMove("bottom", tui.torrentList, name, session)
             updateTable(session)
-            tui.table.Select(newRow, 0)
+            tui.torrentList.Select(newRow, 0)
+            return nil
+
+        case 'l', rune(tcell.KeyEnter):
+            tui.pages.AddAndSwitchToPage("torrentDetails", tui.torrentDetails, true)
+            return nil
+        }
+
+        return event
+    })
+
+    tui.torrentDetails.SetInputCapture(func(event *tcell.EventKey) *tcell.EventKey {
+        switch event.Rune() {
+        case 'q':
+            tui.pages.RemovePage("torrentDetails")
             return nil
         }
 
