@@ -17,6 +17,8 @@ const (
     downloadRate
     ratio
     peers
+    seeders
+    leechers
     size
     left
     name
@@ -52,8 +54,8 @@ func updateTable(session *core.Session) {
         tui.table.SetCell(row + 1, 3, tview.NewTableCell(fmt.Sprintf("%s/s", convertBytesTo(t["rateDownload"].(float64)))))
         tui.table.SetCell(row + 1, 4, tview.NewTableCell(fmt.Sprintf("%v", t["uploadRatio"])))
         tui.table.SetCell(row + 1, 5, tview.NewTableCell(fmt.Sprintf("%v", t["peersConnected"])))
-        tui.table.SetCell(row + 1, 6, tview.NewTableCell(seeders))
-        tui.table.SetCell(row + 1, 7, tview.NewTableCell(leechers))
+        tui.table.SetCell(row + 1, 6, tview.NewTableCell(seeders).SetTextColor(tcell.ColorGreen))
+        tui.table.SetCell(row + 1, 7, tview.NewTableCell(leechers).SetTextColor(tcell.ColorRed))
         tui.table.SetCell(row + 1, 8, tview.NewTableCell(fmt.Sprintf("%s", convertBytesTo(t["totalSize"].(float64)))))
         tui.table.SetCell(row + 1, 9, tview.NewTableCell(fmt.Sprintf("%s", convertBytesTo(t["leftUntilDone"].(float64)))))
         tui.table.SetCell(row + 1, 10, tview.NewTableCell(fmt.Sprintf("%v", t["name"])))
