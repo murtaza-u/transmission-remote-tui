@@ -50,6 +50,18 @@ func setKeys(session *core.Session) {
             updateTable(session)
             tui.table.Select(newRow, 0)
             return nil
+
+        case 'U':
+            newRow := core.QueueMove("top", tui.table, name, session)
+            updateTable(session)
+            tui.table.Select(newRow, 0)
+            return nil
+
+        case 'D':
+            newRow := core.QueueMove("bottom", tui.table, name, session)
+            updateTable(session)
+            tui.table.Select(newRow, 0)
+            return nil
         }
 
         return event

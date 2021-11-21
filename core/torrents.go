@@ -111,10 +111,16 @@ func VerifyTorrent(table *tview.Table, col int, session *Session) {
 func QueueMove(direction string, table *tview.Table, col int, session *Session) int {
     id, row := GetTorrentID(table, col)
     SendRequest("queue-move-" + direction, "1", Arguments{"ids": id}, session)
-    if direction == "up" {
+
+    switch direction {
+    case "up":
         row --
-    } else {
+    case "down":
         row ++
+    case "top":
+        row = 1
+    case "bottom":
+        row = table.GetRowCount() - 1
     }
 
     return row
