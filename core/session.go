@@ -2,7 +2,9 @@ package core
 
 import (
 	"io/ioutil"
+	"log"
 	"net/http"
+	"os"
 	"regexp"
 	"strings"
 )
@@ -14,7 +16,10 @@ type Session struct {
 
 func (session *Session) NewSessionID() {
     resp, err := http.Get(URL)
-    HandleError(err)
+    if err != nil {
+        log.Println("Transmission daemon not running")
+        os.Exit(1)
+    }
     defer resp.Body.Close()
 
     body, err := ioutil.ReadAll(resp.Body)
