@@ -14,7 +14,7 @@ func setKeys(session *core.Session) {
 
         case 'p':
             core.PauseStartTorrent(tui.table, name, session)
-            update(session)
+            updateTable(session)
             return nil
 
         case 'r':
@@ -27,7 +27,7 @@ func setKeys(session *core.Session) {
 
         case 'v':
             core.VerifyTorrent(tui.table, name, session)
-            update(session)
+            updateTable(session)
             return nil
 
         case 'g':
@@ -41,13 +41,13 @@ func setKeys(session *core.Session) {
 
         case 'K':
             newRow := core.QueueMove("up", tui.table, name, session)
-            update(session)
+            updateTable(session)
             tui.table.Select(newRow, 0)
             return nil
 
         case 'J':
             newRow := core.QueueMove("down", tui.table, name, session)
-            update(session)
+            updateTable(session)
             tui.table.Select(newRow, 0)
             return nil
         }

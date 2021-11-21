@@ -5,8 +5,9 @@ import (
     "log"
     "time"
 
-    "github.com/rivo/tview"
     "github.com/Murtaza-Udaipurwala/trt/core"
+    "github.com/gdamore/tcell/v2"
+    "github.com/rivo/tview"
 )
 
 const (
@@ -26,6 +27,8 @@ type TUI struct {
     table *tview.Table
 }
 
+var tui *TUI
+
 func initTUI() *TUI {
     return &TUI{
         app: tview.NewApplication(),
@@ -33,9 +36,7 @@ func initTUI() *TUI {
     }
 }
 
-var tui *TUI
-
-func update(session *core.Session) {
+func updateTable(session *core.Session) {
     core.GetTorrents(session)
     core.SortTorrentsByQueuePosition()
 
@@ -46,8 +47,8 @@ func update(session *core.Session) {
 
         tui.table.SetCell(row + 1, 0, tview.NewTableCell(core.TorrentStatus[statusCode]))
         tui.table.SetCell(row + 1, 1, tview.NewTableCell(fmt.Sprintf("%s", convertSecondsTo(t["eta"].(float64)))))
-        tui.table.SetCell(row + 1, 2, tview.NewTableCell(fmt.Sprintf("%s/s🔼", convertBytesTo(t["rateUpload"].(float64)))))
-        tui.table.SetCell(row + 1, 3, tview.NewTableCell(fmt.Sprintf("%s/s🔽", convertBytesTo(t["rateDownload"].(float64)))))
+        tui.table.SetCell(row + 1, 2, tview.NewTableCell(fmt.Sprintf("%s/s", convertBytesTo(t["rateUpload"].(float64)))))
+        tui.table.SetCell(row + 1, 3, tview.NewTableCell(fmt.Sprintf("%s/s", convertBytesTo(t["rateDownload"].(float64)))))
         tui.table.SetCell(row + 1, 4, tview.NewTableCell(fmt.Sprintf("%v", t["uploadRatio"])))
         tui.table.SetCell(row + 1, 5, tview.NewTableCell(fmt.Sprintf("%v", t["peersConnected"])))
         tui.table.SetCell(row + 1, 6, tview.NewTableCell(fmt.Sprintf("%s", convertBytesTo(t["totalSize"].(float64)))))
@@ -56,22 +57,31 @@ func update(session *core.Session) {
     }
 }
 
+func SetTableHeaders(table *tview.Table) {
+    var headers []string = []string {
+        "Status", "ETA", "Upload Rate", "Download Rate", "Ratio", "Peers",
+        "Size", "Left", "Name",
+    }
+
+    for col, header := range headers {
+        table.
+            SetCell(0, col, tview.NewTableCell(header).
+            SetSelectable(false).
+            SetTextColor(tcell.ColorYellow).
+            SetExpansion(1))
+    }
+}
+
 func Run(session *core.Session) {
     tui = initTUI()
+    SetTableHeaders(tui.table)
 
-    tui.table.SetCell(0, status, tview.NewTableCell("Status").SetSelectable(false).SetExpansion(1))
-    tui.table.SetCell(0, eta, tview.NewTableCell("ETA").SetSelectable(false).SetExpansion(1))
-    tui.table.SetCell(0, uploadRate, tview.NewTableCell("Upload Rate").SetSelectable(false).SetExpansion(1))
-    tui.table.SetCell(0, downloadRate, tview.NewTableCell("Download Rate").SetSelectable(false).SetExpansion(1))
-    tui.table.SetCell(0, ratio, tview.NewTableCell("Ratio").SetSelectable(false).SetExpansion(1))
-    tui.table.SetCell(0, peers, tview.NewTableCell("Peers").SetSelectable(false).SetExpansion(1))
-    tui.table.SetCell(0, size, tview.NewTableCell("Size").SetSelectable(false).SetExpansion(1))
-    tui.table.SetCell(0, left, tview.NewTableCell("Left").SetSelectable(false).SetExpansion(1))
-    tui.table.SetCell(0, name, tview.NewTableCell("Name").SetSelectable(false).SetExpansion(2))
+    tui.table.SetFocusFunc(func() {
+    })
 
     go func() {
         for {
-            update(session)
+            updateTable(session)
             tui.app.Draw()
             time.Sleep(time.Second)
         }
