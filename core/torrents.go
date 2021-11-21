@@ -59,7 +59,7 @@ func IsTorrentPause(id int) (bool, error) {
 var torrentFields []string = []string {
     "id", "name", "status", "eta", "uploadRatio", "peersConnected",
     "totalSize", "rateUpload", "rateDownload", "leftUntilDone","queuePosition",
-    "bandwidthPriority",
+    "bandwidthPriority", "trackerStats",
 }
 
 func GetTorrents(session *Session) {
@@ -124,4 +124,20 @@ func QueueMove(direction string, table *tview.Table, col int, session *Session) 
     }
 
     return row
+}
+
+func GetSeedersLeechers(trackerStats []interface{}) (string, string) {
+    if len(trackerStats) == 0 {
+        return "", ""
+    }
+
+    var seeders, leechers int
+
+    for _, stat := range trackerStats {
+        s := stat.(map[string]interface{})
+        seeders += int(s["seederCount"].(float64))
+        leechers += int(s["leecherCount"].(float64))
+    }
+
+    return fmt.Sprint(seeders), fmt.Sprint(leechers)
 }

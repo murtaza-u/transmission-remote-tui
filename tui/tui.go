@@ -44,6 +44,7 @@ func updateTable(session *core.Session) {
         t := torrent.(map[string]interface{})
 
         statusCode  := int((t["status"].(float64)))
+        seeders, leechers := core.GetSeedersLeechers(t["trackerStats"].([]interface{}))
 
         tui.table.SetCell(row + 1, 0, tview.NewTableCell(core.TorrentStatus[statusCode]))
         tui.table.SetCell(row + 1, 1, tview.NewTableCell(fmt.Sprintf("%s", convertSecondsTo(t["eta"].(float64)))))
@@ -51,16 +52,18 @@ func updateTable(session *core.Session) {
         tui.table.SetCell(row + 1, 3, tview.NewTableCell(fmt.Sprintf("%s/s", convertBytesTo(t["rateDownload"].(float64)))))
         tui.table.SetCell(row + 1, 4, tview.NewTableCell(fmt.Sprintf("%v", t["uploadRatio"])))
         tui.table.SetCell(row + 1, 5, tview.NewTableCell(fmt.Sprintf("%v", t["peersConnected"])))
-        tui.table.SetCell(row + 1, 6, tview.NewTableCell(fmt.Sprintf("%s", convertBytesTo(t["totalSize"].(float64)))))
-        tui.table.SetCell(row + 1, 7, tview.NewTableCell(fmt.Sprintf("%s", convertBytesTo(t["leftUntilDone"].(float64)))))
-        tui.table.SetCell(row + 1, 8, tview.NewTableCell(fmt.Sprintf("%v", t["name"])))
+        tui.table.SetCell(row + 1, 6, tview.NewTableCell(seeders))
+        tui.table.SetCell(row + 1, 7, tview.NewTableCell(leechers))
+        tui.table.SetCell(row + 1, 8, tview.NewTableCell(fmt.Sprintf("%s", convertBytesTo(t["totalSize"].(float64)))))
+        tui.table.SetCell(row + 1, 9, tview.NewTableCell(fmt.Sprintf("%s", convertBytesTo(t["leftUntilDone"].(float64)))))
+        tui.table.SetCell(row + 1, 10, tview.NewTableCell(fmt.Sprintf("%v", t["name"])))
     }
 }
 
 func SetTableHeaders(table *tview.Table) {
     var headers []string = []string {
         "Status", "ETA", "Upload Rate", "Download Rate", "Ratio", "Peers",
-        "Size", "Left", "Name",
+        "Seeders", "Leechers", "Size", "Left", "Name",
     }
 
     for col, header := range headers {
