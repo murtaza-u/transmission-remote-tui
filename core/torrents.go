@@ -13,10 +13,8 @@
 package core
 
 import (
-	"errors"
-	"fmt"
-
-	"github.com/rivo/tview"
+    "errors"
+    "fmt"
 )
 
 var TorrentStatus map[int]string = map[int]string{
@@ -29,23 +27,18 @@ var TorrentStatus map[int]string = map[int]string{
     6: "Seeding",
 }
 
-var Torrents []interface{}
-
-func GetTorrentID(table *tview.Table, col int) (int, int) {
-    row, _ := table.GetSelection()
-    name := table.GetCell(row, col).Text
-
-    for _, torrent := range Torrents {
+func GetTorrentID(name string, col int, torrents []interface{}) int {
+    for _, torrent := range torrents {
         t := torrent.(map[string]interface{})
         if t["name"].(string) == name {
-            return int(t["id"].(float64)), row
+            return int(t["id"].(float64)) 
         }
     }
-    return -1, row
+    return -1
 }
 
-func IsTorrentPause(id int) (bool, error) {
-    for _, torrent := range Torrents {
+func IsTorrentPause(id int, torrents []interface{}) (bool, error) {
+    for _, torrent := range torrents {
         t := torrent.(map[string]interface{})
         if t["id"].(float64) == float64(id) {
             statusCode  := int((t["status"].(float64)))
@@ -62,27 +55,28 @@ var torrentFields []string = []string {
     "bandwidthPriority", "trackerStats",
 }
 
-func GetTorrents(session *Session) {
-    Torrents = SendRequest("torrent-get", fmt.Sprint(TagTorrentList), Arguments {"fields": torrentFields}, session)["torrents"].([]interface{})
+func GetTorrents(session *Session) []interface{} {
+    return SendRequest("torrent-get", fmt.Sprint(TagTorrentList), Arguments {"fields": torrentFields}, session)["torrents"].([]interface{})
 }
 
-func SortTorrentsByQueuePosition() {
-    for i := 0; i < len(Torrents) - 1; i ++ {
-        for j := 0; j < len(Torrents) - 1 - i; j ++ {
-            t1 := Torrents[j].(map[string]interface{})
-            t2 := Torrents[j + 1].(map[string]interface{})
+func SortTorrentsByQueuePosition(torrents []interface{}) []interface{} {
+    for i := 0; i < len(torrents) - 1; i ++ {
+        for j := 0; j < len(torrents) - 1 - i; j ++ {
+            t1 := torrents[j].(map[string]interface{})
+            t2 := torrents[j + 1].(map[string]interface{})
             if t1["queuePosition"].(float64) > t2["queuePosition"].(float64) {
-                temp := Torrents[j]
-                Torrents[j] = Torrents[j + 1]
-                Torrents[j + 1] = temp
+                temp := torrents[j]
+                torrents[j] = torrents[j + 1]
+                torrents[j + 1] = temp
             }
         }
     }
+
+    return torrents
 }
 
-func PauseStartTorrent(table *tview.Table, col int, session *Session) {
-    id, _ := GetTorrentID(table, col)
-    isPaused, err := IsTorrentPause(id)
+func PauseStartTorrent(id int, session *Session, torrents []interface{}) {
+    isPaused, err := IsTorrentPause(id, torrents)
     HandleError(err)
 
     if isPaused {
@@ -92,38 +86,16 @@ func PauseStartTorrent(table *tview.Table, col int, session *Session) {
     }
 }
 
-func RemoveTorrent(table *tview.Table, col int, session *Session, deleteLocalData bool) {
-    id, row := GetTorrentID(table, col)
+func RemoveTorrent(id int, session *Session, deleteLocalData bool) {
     SendRequest("torrent-remove", "1", Arguments{"id": id, "delete-local-data": deleteLocalData}, session)
-    table.RemoveRow(row)
-    if row == 1 {
-        table.Select(row + 1, 0)
-    } else {
-        table.Select(row - 1, 0)
-    }
 }
 
-func VerifyTorrent(table *tview.Table, col int, session *Session) {
-    id, _ := GetTorrentID(table, col)
+func VerifyTorrent(id int, session *Session) {
     SendRequest("torrent-verify", "1", Arguments{"id": id}, session)
 }
 
-func QueueMove(direction string, table *tview.Table, col int, session *Session) int {
-    id, row := GetTorrentID(table, col)
+func QueueMove(direction string, id int, session *Session) {
     SendRequest("queue-move-" + direction, "1", Arguments{"ids": id}, session)
-
-    switch direction {
-    case "up":
-        row --
-    case "down":
-        row ++
-    case "top":
-        row = 1
-    case "bottom":
-        row = table.GetRowCount() - 1
-    }
-
-    return row
 }
 
 func GetSeedersLeechers(trackerStats []interface{}) (string, string) {

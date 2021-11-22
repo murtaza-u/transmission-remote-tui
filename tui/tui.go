@@ -11,12 +11,13 @@ import (
 type TUI struct {
     app *tview.Application
     pages *tview.Pages
-    torrentList *tview.Table
-    torrentDetails *tview.Flex
-    navigation *tview.Table
+    torrents *Torrents
+    layout *tview.Flex
+    navigation *Navigation
     overview *tview.TextView
     files *tview.Table
     trackers *tview.TextView
+    peers *tview.TextView
 }
 
 var tui *TUI
@@ -25,34 +26,24 @@ func initTUI() *TUI {
     return &TUI{
         app: tview.NewApplication(),
         pages: tview.NewPages(),
-        torrentList: tview.NewTable().SetSelectable(true, false).SetFixed(1, 1),
-        torrentDetails: tview.NewFlex().SetDirection(tview.FlexRow),
-        navigation: tview.NewTable().SetSelectable(false, true).SetFixed(1, 1),
+        torrents: initTorrents(),
+        layout: tview.NewFlex().SetDirection(tview.FlexRow),
+        navigation: initNavigation(),
     }
-}
-
-func setNavigation(navigation *tview.Table) {
-    var headers []string = []string { "Overview", "Files", "Trackers" }
-    for col, header := range headers {
-        navigation.SetCell(0, col, tview.NewTableCell(header).SetExpansion(1))
-    }
-}
-
-func setTorrentDetails(tui *TUI) {
-    setNavigation(tui.navigation)
-    tui.torrentDetails.AddItem(tui.navigation, 1, 1, true)
 }
 
 func Run(session *core.Session) {
     tui = initTUI()
-    tui.pages.AddPage("torrentList", tui.torrentList, true, true)
+    tui.pages.AddPage("torrents", tui.torrents.widget, true, true)
 
-    setTorrentDetails(tui)
-    setTableHeaders(tui.torrentList)
+    tui.navigation.setHeaders()
+    tui.layout.AddItem(tui.navigation.widget, 1, 1, true)
+
+    tui.torrents.setHeaders()
 
     go func() {
         for {
-            updateTable(session)
+            tui.torrents.update(session)
             tui.app.Draw()
             time.Sleep(time.Second)
         }

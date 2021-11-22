@@ -2,6 +2,6 @@ package tui
 
 import "github.com/rivo/tview"
 
-type Trackers struct {
+type Peers struct {
     widget *tview.TextView
 }
