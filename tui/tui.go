@@ -60,7 +60,7 @@ func Run(session *core.Session) {
 
     tui.navigation.setHeaders()
     tui.layout.AddItem(tui.navigation.widget, 1, 1, true)
-    tui.layout.AddItem(tui.overview.widget, 0, 5, false)
+    tui.layout.AddItem(tui.overview.widget, 0, 1, true)
 
     tui.torrents.setHeaders()
 

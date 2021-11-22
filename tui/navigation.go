@@ -27,13 +27,13 @@ func initNavigation(session *core.Session) *Navigation {
 
             switch currentWidget {
             case "overview":
-                tui.layout.AddItem(tui.overview.widget, 0, 5, false)
+                tui.layout.AddItem(tui.overview.widget, 0, 1, true)
             case "files":
-                tui.layout.AddItem(tui.files.widget, 0, 5, false)
+                tui.layout.AddItem(tui.files.widget, 0, 1, true)
             case "peers":
-                tui.layout.AddItem(tui.peers.widget, 0, 5, false)
+                tui.layout.AddItem(tui.peers.widget, 0, 1, true)
             case "trackers":
-                tui.layout.AddItem(tui.trackers.widget, 0, 5, false)
+                tui.layout.AddItem(tui.trackers.widget, 0, 1, true)
             }
 
             redraw(session)

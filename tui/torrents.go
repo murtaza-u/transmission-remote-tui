@@ -45,16 +45,20 @@ func (torrents *List) update(session *core.Session) {
 
     for row, torrent := range torrents.torrents {
         status  := core.TorrentStatus[torrent.Status]
-        eta := fmt.Sprintf("%s", convertSecondsTo(float64(torrent.ETA)))
-        uploadRate := fmt.Sprintf("%s/s", convertBytesTo(float64(torrent.RateUpload)))
-        downloadRate := fmt.Sprintf("%s/s", convertBytesTo(float64(torrent.RateDownload)))
-        ratio := fmt.Sprintf("%f", torrent.UploadRatio)
+        eta := fmt.Sprintf("%s", parseTime(float64(torrent.ETA)))
+        uploadRate := fmt.Sprintf("%s/s", parseBytes(float64(torrent.RateUpload)))
+        downloadRate := fmt.Sprintf("%s/s", parseBytes(float64(torrent.RateDownload)))
         seeders, leechers := core.GetSeedersLeechers(torrent.TrackerStats)
-        size := convertBytesTo(float64(torrent.TotalSize))
-        left := convertBytesTo(float64(torrent.LeftUntilDone))
+        size := parseBytes(float64(torrent.TotalSize))
+        left := parseBytes(float64(torrent.LeftUntilDone))
         name := torrent.Name
 
-        peers := ""
+        var ratio string
+        if torrent.UploadRatio < 0 {
+            ratio = fmt.Sprintf("%f", torrent.UploadRatio)
+        }
+
+        var peers string
         if torrent.PeersConnected >= 0 {
             peers = fmt.Sprint(torrent.PeersConnected)
         }

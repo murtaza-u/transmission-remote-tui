@@ -13,6 +13,16 @@ func setKeys(session *core.Session) {
             currentWidget = "torrents"
             tui.pages.RemovePage("details")
             return nil
+
+        case 'j':
+            row, col := tui.overview.widget.GetScrollOffset()
+            tui.overview.widget.ScrollTo(row + 1, col)
+            return nil
+
+        case 'k':
+            row, col := tui.overview.widget.GetScrollOffset()
+            tui.overview.widget.ScrollTo(row - 1, col)
+            return nil
         }
 
         return event

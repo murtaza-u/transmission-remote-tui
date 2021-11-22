@@ -3,6 +3,7 @@ package tui
 import (
     "fmt"
     "math"
+    "time"
 )
 
 const (
@@ -13,7 +14,7 @@ const (
     TB
 )
 
-func convertBytesTo(b float64) string {
+func parseBytes(b float64) string {
     if b >= math.Pow(10, TB) {
         return fmt.Sprintf("%.2f TB", b * math.Pow(10, -TB))
     } else if b >= math.Pow(10, GB) {
@@ -25,18 +26,40 @@ func convertBytesTo(b float64) string {
     }
 }
 
-func convertSecondsTo(s float64) string {
-    if s < 0 {
+func parseTime(s float64) string {
+    t := time.Unix(int64(s), 0)
+    beggining := time.Unix(0, 0)
+    diff := t.Sub(beggining)
+    if diff < 0 {
         return ""
-    } else if s < 60 {
-        return fmt.Sprintf("%ds", int(s))
-    } else if s < 3600 {
-        return fmt.Sprintf("%dm", int(s/60.0))
-    } else if s < 86400 {
-        return fmt.Sprintf("%dday(s)", int(s/3600.0))
-    } else if s < 2592000 {
-        return fmt.Sprintf("%dmonth(s)", int(s/85400.0))
-    } else {
-        return fmt.Sprintf("%dyear(s)", int(s/2592000.0))
     }
+
+    // day = 24h
+    // week = 168h
+    // month = 720h
+    // year = 8760h
+
+    hours := diff.Hours()
+    if hours >= 8760 {
+        return fmt.Sprintf("%d year(s)", int(hours / 8760))
+    } else if hours >= 720 {
+        return fmt.Sprintf("%d month(s)", int(hours / 720))
+    } else if hours >= 168 {
+        return fmt.Sprintf("%d week(s)", int(hours / 168))
+    } else if hours >= 24 {
+        return fmt.Sprintf("%d day(s)", int(hours / 24))
+    } else {
+        return diff.String()
+    }
+}
+
+func convertUnixTime(t int64) (string, string) {
+    if t == 0 {
+        return "", ""
+    }
+    local := time.Unix(t, 0)
+    currentTime := time.Now()
+    diff := currentTime.Sub(local)
+
+    return local.String(), fmt.Sprintf("[%s ago]", parseTime(diff.Seconds()))
 }
