@@ -1,6 +1,11 @@
 package tui
 
-import "github.com/rivo/tview"
+import (
+    "strings"
+
+    "github.com/rivo/tview"
+    "github.com/Murtaza-Udaipurwala/trt/core"
+)
 
 type Navigation struct {
     widget *tview.Table
@@ -13,8 +18,25 @@ func (nav *Navigation) setHeaders() {
     }
 }
 
-func initNavigation() *Navigation {
+func initNavigation(session *core.Session) *Navigation {
     return &Navigation{
-        widget: tview.NewTable().SetSelectable(false, true).SetFixed(1, 1),
+        widget: tview.NewTable().SetSelectable(false, true).SetFixed(1, 1).SetSelectionChangedFunc(func(row, column int) {
+            currentWidget = strings.ToLower(tui.navigation.widget.GetCell(row, column).Text)
+            tui.layout.Clear()
+            tui.layout.AddItem(tui.navigation.widget, 1, 1, true)
+
+            switch currentWidget {
+            case "overview":
+                tui.layout.AddItem(tui.overview.widget, 0, 5, false)
+            case "files":
+                tui.layout.AddItem(tui.files.widget, 0, 5, false)
+            case "peers":
+                tui.layout.AddItem(tui.peers.widget, 0, 5, false)
+            case "trackers":
+                tui.layout.AddItem(tui.trackers.widget, 0, 5, false)
+            }
+
+            redraw(session)
+        }),
     }
 }

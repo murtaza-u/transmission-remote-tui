@@ -205,6 +205,11 @@ func (torrents *List) setKeys(session *core.Session) {
             return nil
 
         case 'l', rune(tcell.KeyEnter):
+            id, err := torrents.currentSelectedID()
+            if err != nil {
+                return nil
+            }
+            tui.overview.id = id
             currentWidget = "overview"
             redraw(session)
             tui.pages.AddAndSwitchToPage("details", tui.layout, true)

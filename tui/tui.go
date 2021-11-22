@@ -1,35 +1,38 @@
 package tui
 
 import (
-	"log"
-	"time"
+    "log"
+    "time"
 
-	"github.com/Murtaza-Udaipurwala/trt/core"
-	"github.com/rivo/tview"
+    "github.com/Murtaza-Udaipurwala/trt/core"
+    "github.com/rivo/tview"
 )
 
 type TUI struct {
     app *tview.Application
     pages *tview.Pages
-    torrents *List
     layout *tview.Flex
+    torrents *List
     navigation *Navigation
     overview *Overview
-    files *tview.Table
-    trackers *tview.TextView
-    peers *tview.TextView
+    files *Files
+    trackers *Trackers
+    peers *Peers
 }
 
 var tui *TUI
 
-func initTUI() *TUI {
+func initTUI(session *core.Session) *TUI {
     return &TUI{
         app: tview.NewApplication(),
         pages: tview.NewPages(),
         torrents: initTorrents(),
         layout: tview.NewFlex().SetDirection(tview.FlexRow),
-        navigation: initNavigation(),
+        navigation: initNavigation(session),
         overview: initOverview(),
+        files: initFiles(),
+        peers: initPeers(),
+        trackers: initTrackers(),
     }
 }
 
@@ -41,12 +44,18 @@ func redraw(session *core.Session) {
         tui.torrents.update(session)
     case "overview":
         tui.overview.update(session)
+    case "files":
+        return
+    case "peers":
+        return
+    case "trackers":
+        return
     }
 }
 
 func Run(session *core.Session) {
     currentWidget = "torrents"
-    tui = initTUI()
+    tui = initTUI(session)
     tui.pages.AddPage("torrents", tui.torrents.widget, true, true)
 
     tui.navigation.setHeaders()

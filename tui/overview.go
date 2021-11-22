@@ -1,6 +1,8 @@
 package tui
 
 import (
+    "fmt"
+
     "github.com/Murtaza-Udaipurwala/trt/core"
     "github.com/rivo/tview"
 )
@@ -15,16 +17,23 @@ var overviewFields []string = []string {
     "dateCreated", "startDate", "doneDate", "comment", "creator", "hashString",
     "totalSize", "leftUntilDone", "pieceCount", "pieceSize", "seedRatioLimit",
     "seedRatioMode", "uploadLimit", "downloadLimit", "uploadLimited",
-    "downloadLimited", "files",
+    "downloadLimited", "files", "id",
 }
 
 func (overview *Overview) update(session *core.Session) {
-    // torrent, err := core.GetTorrentByID(session, overview.id,  overviewFields)
-    // if err != nil {
-    //     currentWidget = "torrents"
-    //     redraw(session)
-    //     tui.pages.RemovePage("details")
-    // }
+    torrent, err := core.GetTorrentByID(session, overview.id,  overviewFields)
+    if err != nil {
+        currentWidget = "torrents"
+        redraw(session)
+        tui.pages.RemovePage("details")
+    }
+
+    name := torrent.Name
+    hash := torrent.HashString
+    location := torrent.DownloadDir
+
+    content := fmt.Sprintf("Name: %s\nHash: %s\nLocation: %s", name, hash, location)
+    overview.widget.SetText(content)
 }
 
 func initOverview() *Overview {
