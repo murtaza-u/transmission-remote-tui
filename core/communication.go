@@ -33,7 +33,7 @@ func HandleError(err error) {
     }
 }
 
-func SendRequest(method, tag string, arguments Arguments, session *Session) Arguments {
+func SendRequest(method, tag string, arguments Arguments, session *Session) Response {
     encoded, err := json.Marshal(RequestBody{method, tag, arguments})
     HandleError(err)
 
@@ -61,8 +61,7 @@ func SendRequest(method, tag string, arguments Arguments, session *Session) Argu
         session.NewSessionID()
     }
 
-    args := make(map[string]map[string]interface{})
+    args := Response{}
     json.Unmarshal(body, &args)
-
-    return args["arguments"]
+    return args
 }

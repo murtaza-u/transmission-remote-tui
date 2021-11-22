@@ -9,55 +9,71 @@ import (
 	"github.com/rivo/tview"
 )
 
-type Torrents struct {
+type List struct {
     widget *tview.Table
-    torrents []interface{}
+    torrents []core.Torrent
 }
 
 const (
-    status = iota
-    eta
-    uploadRate
-    downloadRate
-    ratio
-    peers
-    seeders
-    leechers
-    size
-    left
-    name
+    statusCol = iota
+    etaCol
+    uploadRateCol
+    downloadRateCol
+    ratioCol
+    peersCol
+    seedersCol
+    leechersCol
+    sizeCol
+    leftCol
+    nameCol
 )
 
-func initTorrents() *Torrents {
-    return &Torrents{
+func initTorrents() *List {
+    return &List{
         widget: tview.NewTable().SetSelectable(true, false).SetFixed(1, 1),
     }
 }
 
-func (torrents *Torrents) update(session *core.Session) {
-    torrents.torrents = core.SortTorrentsByQueuePosition(core.GetTorrents(session))
+var torrentFields []string = []string {
+    "id", "name", "status", "eta", "uploadRatio", "peersConnected",
+    "totalSize", "rateUpload", "rateDownload", "leftUntilDone","queuePosition",
+    "bandwidthPriority", "trackerStats",
+}
+
+func (torrents *List) update(session *core.Session) {
+    torrents.torrents = core.SortTorrentsByQueuePosition(core.GetTorrents(session, torrentFields))
 
     for row, torrent := range torrents.torrents {
-        t := torrent.(map[string]interface{})
+        status  := core.TorrentStatus[torrent.Status]
+        eta := fmt.Sprintf("%s", convertSecondsTo(float64(torrent.ETA)))
+        uploadRate := fmt.Sprintf("%s/s", convertBytesTo(float64(torrent.RateUpload)))
+        downloadRate := fmt.Sprintf("%s/s", convertBytesTo(float64(torrent.RateDownload)))
+        ratio := fmt.Sprintf("%f", torrent.UploadRatio)
+        seeders, leechers := core.GetSeedersLeechers(torrent.TrackerStats)
+        size := convertBytesTo(float64(torrent.TotalSize))
+        left := convertBytesTo(float64(torrent.LeftUntilDone))
+        name := torrent.Name
 
-        statusCode  := int((t["status"].(float64)))
-        seeders, leechers := core.GetSeedersLeechers(t["trackerStats"].([]interface{}))
+        peers := ""
+        if torrent.PeersConnected >= 0 {
+            peers = fmt.Sprint(torrent.PeersConnected)
+        }
 
-        tui.torrents.widget.SetCell(row + 1, 0, tview.NewTableCell(core.TorrentStatus[statusCode]))
-        tui.torrents.widget.SetCell(row + 1, 1, tview.NewTableCell(fmt.Sprintf("%s", convertSecondsTo(t["eta"].(float64)))))
-        tui.torrents.widget.SetCell(row + 1, 2, tview.NewTableCell(fmt.Sprintf("%s/s", convertBytesTo(t["rateUpload"].(float64)))))
-        tui.torrents.widget.SetCell(row + 1, 3, tview.NewTableCell(fmt.Sprintf("%s/s", convertBytesTo(t["rateDownload"].(float64)))))
-        tui.torrents.widget.SetCell(row + 1, 4, tview.NewTableCell(fmt.Sprintf("%v", t["uploadRatio"])))
-        tui.torrents.widget.SetCell(row + 1, 5, tview.NewTableCell(fmt.Sprintf("%v", t["peersConnected"])))
-        tui.torrents.widget.SetCell(row + 1, 6, tview.NewTableCell(seeders))
-        tui.torrents.widget.SetCell(row + 1, 7, tview.NewTableCell(leechers))
-        tui.torrents.widget.SetCell(row + 1, 8, tview.NewTableCell(fmt.Sprintf("%s", convertBytesTo(t["totalSize"].(float64)))))
-        tui.torrents.widget.SetCell(row + 1, 9, tview.NewTableCell(fmt.Sprintf("%s", convertBytesTo(t["leftUntilDone"].(float64)))))
-        tui.torrents.widget.SetCell(row + 1, 10, tview.NewTableCell(fmt.Sprintf("%v", t["name"])))
+        tui.torrents.widget.SetCell(row + 1, statusCol, tview.NewTableCell(status))
+        tui.torrents.widget.SetCell(row + 1, etaCol, tview.NewTableCell(eta))
+        tui.torrents.widget.SetCell(row + 1, uploadRateCol, tview.NewTableCell(uploadRate))
+        tui.torrents.widget.SetCell(row + 1, downloadRateCol, tview.NewTableCell(downloadRate))
+        tui.torrents.widget.SetCell(row + 1, ratioCol, tview.NewTableCell(ratio))
+        tui.torrents.widget.SetCell(row + 1, peersCol, tview.NewTableCell(peers))
+        tui.torrents.widget.SetCell(row + 1, seedersCol, tview.NewTableCell(seeders))
+        tui.torrents.widget.SetCell(row + 1, leechersCol, tview.NewTableCell(leechers))
+        tui.torrents.widget.SetCell(row + 1, sizeCol, tview.NewTableCell(size))
+        tui.torrents.widget.SetCell(row + 1, leftCol, tview.NewTableCell(left))
+        tui.torrents.widget.SetCell(row + 1, nameCol, tview.NewTableCell(name))
     }
 }
 
-func (torrents *Torrents) setHeaders() {
+func (torrents *List) setHeaders() {
     var headers []string = []string {
         "Status", "ETA", "Upload Rate", "Download Rate", "Ratio", "Peers",
         "Seeders", "Leechers", "Size", "Left", "Name",
@@ -72,29 +88,28 @@ func (torrents *Torrents) setHeaders() {
     }
 }
 
-func (torrents *Torrents) currentSelected() (map[string]interface{}, error) {
+func (torrents *List) currentSelected() (*core.Torrent, error) {
     row, _ := torrents.widget.GetSelection()
-    name := torrents.widget.GetCell(row, name).Text
+    name := torrents.widget.GetCell(row, nameCol).Text
     for _, torrent := range torrents.torrents {
-        t := torrent.(map[string]interface{})
-        if t["name"].(string) == name {
-            return t, nil
+        if torrent.Name == name {
+            return &torrent, nil
         }
     }
 
-    return nil, errors.New("Torrent not found")
+    return &core.Torrent{}, errors.New("Torrent not found")
 }
 
-func (torrents *Torrents) currentSelectedID() (int, error) {
+func (torrents *List) currentSelectedID() (int, error) {
     torrent, err := torrents.currentSelected()
     if err != nil {
         return -1, err
     }
 
-    return int(torrent["id"].(float64)), nil
+    return torrent.Id, nil
 }
 
-func (torrents *Torrents) setKeys(session *core.Session) {
+func (torrents *List) setKeys(session *core.Session) {
     torrents.widget.SetInputCapture(func(event *tcell.EventKey) *tcell.EventKey {
         switch event.Rune() {
         case 'q':
@@ -190,7 +205,9 @@ func (torrents *Torrents) setKeys(session *core.Session) {
             return nil
 
         case 'l', rune(tcell.KeyEnter):
-            tui.pages.AddAndSwitchToPage("torrentDetails", tui.layout, true)
+            currentWidget = "overview"
+            redraw(session)
+            tui.pages.AddAndSwitchToPage("details", tui.layout, true)
             return nil
         }
 

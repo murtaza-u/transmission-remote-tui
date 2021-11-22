@@ -1,8 +1,8 @@
 package tui
 
 import (
-	"github.com/Murtaza-Udaipurwala/trt/core"
-	"github.com/gdamore/tcell/v2"
+    "github.com/Murtaza-Udaipurwala/trt/core"
+    "github.com/gdamore/tcell/v2"
 )
 
 func setKeys(session *core.Session) {
@@ -10,7 +10,8 @@ func setKeys(session *core.Session) {
     tui.layout.SetInputCapture(func(event *tcell.EventKey) *tcell.EventKey {
         switch event.Rune() {
         case 'q':
-            tui.pages.RemovePage("torrentDetails")
+            currentWidget = "torrents"
+            tui.pages.RemovePage("details")
             return nil
         }
 
