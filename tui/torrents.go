@@ -3,6 +3,7 @@ package tui
 import (
 	"errors"
 	"fmt"
+	"strings"
 
 	"github.com/Murtaza-Udaipurwala/trt/core"
 	"github.com/gdamore/tcell/v2"
@@ -110,7 +111,7 @@ func (torrents *List) currentSelectedID() (int, error) {
         return -1, err
     }
 
-    return torrent.Id, nil
+    return torrent.ID, nil
 }
 
 func (torrents *List) setKeys(session *core.Session) {
@@ -213,8 +214,9 @@ func (torrents *List) setKeys(session *core.Session) {
             if err != nil {
                 return nil
             }
-            tui.overview.id = id
-            currentWidget = "overview"
+            tui.id = id
+            _, col := tui.navigation.widget.GetSelection()
+            currentWidget = strings.ToLower(tui.navigation.widget.GetCell(0, col).Text)
             redraw(session)
             tui.pages.AddAndSwitchToPage("details", tui.layout, true)
             return nil

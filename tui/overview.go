@@ -9,7 +9,6 @@ import (
 
 type Overview struct {
     widget *tview.TextView
-    id int
 }
 
 var overviewFields []string = []string {
@@ -21,7 +20,7 @@ var overviewFields []string = []string {
 }
 
 func (overview *Overview) update(session *core.Session) {
-    torrent, err := core.GetTorrentByID(session, overview.id,  overviewFields)
+    torrent, err := core.GetTorrentByID(session, tui.id,  overviewFields)
     if err != nil {
         currentWidget = "torrents"
         redraw(session)
@@ -52,7 +51,7 @@ func (overview *Overview) update(session *core.Session) {
     left := parseBytes(float64(torrent.LeftUntilDone))
     pieceCount := torrent.PieceCount
     pieceSize := parseBytes(float64(torrent.PieceSize))
-    id := torrent.Id
+    id := torrent.ID
     filesCount := len(torrent.Files)
 
     var downloadLimit, uploadLimit, seedRatioLimit string

@@ -18,6 +18,7 @@ type TUI struct {
     files *Files
     trackers *Trackers
     peers *Peers
+    id int
 }
 
 var tui *TUI
@@ -33,6 +34,7 @@ func initTUI(session *core.Session) *TUI {
         files: initFiles(),
         peers: initPeers(),
         trackers: initTrackers(),
+        id: -1,
     }
 }
 

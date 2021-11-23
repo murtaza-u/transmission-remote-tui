@@ -22,6 +22,7 @@ func initNavigation(session *core.Session) *Navigation {
     return &Navigation{
         widget: tview.NewTable().SetSelectable(false, true).SetFixed(1, 1).SetSelectionChangedFunc(func(row, column int) {
             currentWidget = strings.ToLower(tui.navigation.widget.GetCell(row, column).Text)
+            redraw(session)
             tui.layout.Clear()
             tui.layout.AddItem(tui.navigation.widget, 1, 1, true)
 
@@ -35,8 +36,6 @@ func initNavigation(session *core.Session) *Navigation {
             case "trackers":
                 tui.layout.AddItem(tui.trackers.widget, 0, 1, true)
             }
-
-            redraw(session)
         }),
     }
 }

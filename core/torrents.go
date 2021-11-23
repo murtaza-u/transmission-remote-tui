@@ -100,7 +100,7 @@ type Torrent struct {
     HaveUnchecked           int64          `json:"haveUnchecked"`
     HaveValid               int64          `json:"haveValid"`
     HonorsSessionLimits     bool           `json:"honorsSessionLimits"`
-    Id                      int            `json:"id"`
+    ID                      int            `json:"id"`
     IsPrivate               bool           `json:"isPrivate"`
     LeftUntilDone           int64          `json:"leftUntilDone"`
     MagnetLink              string         `json:"magnetLink"`
@@ -141,7 +141,7 @@ var TorrentStatus map[int]string = map[int]string{
 func GetTorrentID(name string, col int, torrents []Torrent) int {
     for _, torrent := range torrents {
         if torrent.Name == name {
-            return torrent.Id
+            return torrent.ID
         }
     }
     return -1
@@ -149,7 +149,7 @@ func GetTorrentID(name string, col int, torrents []Torrent) int {
 
 func IsTorrentPause(id int, torrents []Torrent) (bool, error) {
     for _, torrent := range torrents {
-        if torrent.Id == id {
+        if torrent.ID == id {
             return torrent.Status == 0, nil
         }
     }
@@ -164,7 +164,7 @@ func GetTorrents(session *Session, fields []string) []Torrent {
 func GetTorrentByID(session *Session, id int, fields []string) (Torrent, error) {
     torrents := GetTorrents(session, fields)
     for _, torrent := range torrents {
-        if torrent.Id == id {
+        if torrent.ID == id {
             return torrent, nil
         }
     }

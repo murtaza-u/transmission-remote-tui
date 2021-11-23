@@ -9,7 +9,6 @@ import (
 
 type Trackers struct {
     widget *tview.TextView
-    id int
 }
 
 func initTrackers() *Trackers {
@@ -18,10 +17,10 @@ func initTrackers() *Trackers {
     }
 }
 
-var trackerFields []string = []string { "trackerStats" }
+var trackerFields []string = []string { "trackerStats", "id" }
 
 func (trackers *Trackers) update(session *core.Session) {
-    torrent, err := core.GetTorrentByID(session, trackers.id, trackerFields)
+    torrent, err := core.GetTorrentByID(session, tui.id, trackerFields)
     if err != nil {
         currentWidget = "torrents"
         redraw(session)
