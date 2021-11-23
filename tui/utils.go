@@ -73,7 +73,4 @@ func convertUnixTime(t int64) (string, string) {
 
 func setSelectedCellStyle(table *tview.Table, style tcell.Style) {
     table.SetSelectedStyle(style)
-
-    // tui.navigation.widget.SetSelectedStyle(tcell.StyleDefault.Background(tcell.ColorBlack))
-    // tui.peers.widget.SetSelectedStyle(tcell.StyleDefault.Background(tcell.ColorWhite).Foreground(tcell.ColorBlack))
 }

@@ -48,7 +48,7 @@ func redraw(session *core.Session) {
     case "overview":
         tui.overview.update(session)
     case "files":
-        return
+        tui.files.update(session)
     case "peers":
         tui.peers.update(session)
     case "trackers":
@@ -71,6 +71,7 @@ func setKeys(session *core.Session) {
     tui.torrents.setKeys(session)
     tui.navigation.setKeys()
     tui.peers.setKeys()
+    tui.files.setKeys()
 }
 
 func Run(session *core.Session) {
@@ -79,6 +80,7 @@ func Run(session *core.Session) {
     tui.pages.AddPage("torrents", tui.torrents.widget, true, true)
 
     tui.navigation.setHeaders()
+    tui.files.setHeaders()
 
     tui.layout.AddItem(tui.navigation.widget, 1, 1, true)
     tui.layout.AddItem(tui.overview.widget, 0, 1, false)

@@ -82,6 +82,13 @@ func (nav *Navigation) setKeys() {
                 return nil
 
             case "files":
+                tui.app.SetFocus(tui.files.widget)
+                setSelectedCellStyle(tui.navigation.widget,
+                                     tcell.StyleDefault.Background(tcell.ColorBlack))
+
+                setSelectedCellStyle(tui.files.widget,
+                                     tcell.StyleDefault.Background(tcell.ColorWhite).Foreground(tcell.ColorBlack))
+
                 return nil
             }
 

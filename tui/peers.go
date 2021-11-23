@@ -27,7 +27,8 @@ func (p *Peers) setHeaders() {
     for col, header := range headers {
         p.widget.SetCell(0, col, tview.NewTableCell(header).
                                        SetSelectable(false).
-                                       SetExpansion(1))
+                                       SetExpansion(1).
+                                       SetTextColor(tcell.ColorYellow))
     }
 }
 
