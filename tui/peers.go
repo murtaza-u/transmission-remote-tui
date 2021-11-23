@@ -62,3 +62,31 @@ func (p *Peers) update(session *core.Session) {
         p.widget.SetCell(row + 1, 4, tview.NewTableCell(port).SetExpansion(1))
     }
 }
+
+func (p *Peers) setKeys() {
+    tui.peers.widget.SetInputCapture(func(event *tcell.EventKey) *tcell.EventKey {
+        switch event.Rune() {
+        case 'k':
+            row, _ := tui.peers.widget.GetSelection()
+            if row == 1 {
+                tui.app.SetFocus(tui.layout)
+                setSelectedCellStyle(tui.peers.widget,
+                                     tcell.StyleDefault.Background(tcell.ColorBlack))
+
+                setSelectedCellStyle(tui.navigation.widget,
+                                     tcell.StyleDefault.Background(tcell.ColorWhite).Foreground(tcell.ColorBlack))
+                return nil
+            }
+
+        case 'q':
+            tui.app.SetFocus(tui.layout)
+            setSelectedCellStyle(tui.peers.widget,
+                                 tcell.StyleDefault.Background(tcell.ColorBlack))
+
+            setSelectedCellStyle(tui.navigation.widget,
+                                 tcell.StyleDefault.Background(tcell.ColorWhite).  Foreground(tcell.ColorBlack))
+            return nil
+        }
+        return event
+    })
+}

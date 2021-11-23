@@ -1,10 +1,11 @@
 package tui
 
 import (
-    "strings"
+	"strings"
 
-    "github.com/rivo/tview"
-    "github.com/Murtaza-Udaipurwala/trt/core"
+	"github.com/Murtaza-Udaipurwala/trt/core"
+	"github.com/gdamore/tcell/v2"
+	"github.com/rivo/tview"
 )
 
 type Navigation struct {
@@ -48,4 +49,56 @@ func initNavigation(session *core.Session) *Navigation {
             redraw(session)
         }),
     }
+}
+
+func (nav *Navigation) setKeys() {
+    tui.navigation.widget.SetInputCapture(func(event *tcell.EventKey) *tcell.EventKey {
+        switch event.Rune() {
+        case 'q':
+            currentWidget = "torrents"
+            tui.pages.RemovePage("details")
+            return nil
+
+        case 'j':
+            switch currentWidget {
+            case "overview":
+                row, col := tui.overview.widget.GetScrollOffset()
+                tui.overview.widget.ScrollTo(row + 1, col)
+                return nil
+
+            case "trackers":
+                row, col := tui.trackers.widget.GetScrollOffset()
+                tui.trackers.widget.ScrollTo(row + 1, col)
+                return nil
+
+            case "peers":
+                tui.app.SetFocus(tui.peers.widget)
+                setSelectedCellStyle(tui.navigation.widget,
+                                     tcell.StyleDefault.Background(tcell.ColorBlack))
+
+                setSelectedCellStyle(tui.peers.widget,
+                                     tcell.StyleDefault.Background(tcell.ColorWhite).Foreground(tcell.ColorBlack))
+
+                return nil
+
+            case "files":
+                return nil
+            }
+
+        case 'k':
+            switch currentWidget {
+            case "overview":
+                row, col := tui.overview.widget.GetScrollOffset()
+                tui.overview.widget.ScrollTo(row - 1, col)
+                return nil
+
+            case "trackers":
+                row, col := tui.trackers.widget.GetScrollOffset()
+                tui.trackers.widget.ScrollTo(row - 1, col)
+                return nil
+            }
+        }
+
+        return event
+    })
 }

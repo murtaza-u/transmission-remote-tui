@@ -6,6 +6,7 @@ import (
 
 	"github.com/Murtaza-Udaipurwala/trt/core"
 	"github.com/rivo/tview"
+    "github.com/gdamore/tcell/v2"
 )
 
 type TUI struct {
@@ -53,6 +54,23 @@ func redraw(session *core.Session) {
     case "trackers":
         tui.trackers.update(session)
     }
+}
+
+func setKeys(session *core.Session) {
+    tui.app.SetInputCapture(func(event *tcell.EventKey) *tcell.EventKey {
+        switch event.Rune() {
+        case 'Q':
+            core.SendRequest("session-close", "1", core.Arguments{}, session)
+            tui.app.Stop()
+            return nil
+        }
+
+        return event
+    })
+
+    tui.torrents.setKeys(session)
+    tui.navigation.setKeys()
+    tui.peers.setKeys()
 }
 
 func Run(session *core.Session) {
