@@ -10,12 +10,16 @@ import (
 
 type Files struct {
     widget *tview.Table
+    num int
+    torrentID int
 }
 
 func initFiles() *Files {
     return &Files{
         widget: tview.NewTable().SetSelectable(true, false).SetFixed(1, 1).
-                                 SetSelectedStyle(tcell.StyleDefault.Background(tcell.ColorBlack)),
+                                 SetSelectedStyle(tcell.StyleDefault.Background(tcell.ColorBlack)).SetSelectionChangedFunc(func(row, column int) {
+                                     tui.files.num = row - 1
+                                 }),
     }
 }
 
@@ -39,6 +43,7 @@ func (f *Files) update(session *core.Session) {
         tui.pages.RemovePage("details")
     }
 
+    f.torrentID = torrent.ID
     files := torrent.Files
     priorities := torrent.Priorities
     wanted := torrent.Wanted
@@ -56,15 +61,15 @@ func (f *Files) update(session *core.Session) {
         var priority string
         switch priorities[row] {
         case -1:
-            priority = "Low"
+            priority = "low"
         case 0:
-            priority = "Normal"
+            priority = "normal"
         case 1:
-            priority = "High"
+            priority = "high"
         }
 
         if wanted[row] == 0 {
-            priority = "Off"
+            priority = "off"
         }
 
         f.widget.SetCell(row + 1, 0, tview.NewTableCell(size))
@@ -74,7 +79,7 @@ func (f *Files) update(session *core.Session) {
     }
 }
 
-func (f *Files) setKeys() {
+func (f *Files) setKeys(session *core.Session) {
     tui.files.widget.SetInputCapture(func(event *tcell.EventKey) *tcell.EventKey {
         switch event.Rune() {
         case 'k':
@@ -104,6 +109,36 @@ func (f *Files) setKeys() {
 
         case 'G':
             f.widget.Select(f.widget.GetRowCount() - 1, 0)
+            return nil
+
+        case 'h':
+            currentPriority := f.widget.GetCell(f.num + 1, 2).Text
+            switch currentPriority {
+            case "low":
+                core.ChangeFilePriority(f.num, f.torrentID, "low", false, session)
+                f.update(session)
+            case "normal":
+                core.ChangeFilePriority(f.num, f.torrentID, "low", true, session)
+                f.update(session)
+            case "high":
+                core.ChangeFilePriority(f.num, f.torrentID, "normal", true, session)
+                f.update(session)
+            }
+            return nil
+
+        case 'l':
+            currentPriority := f.widget.GetCell(f.num + 1, 2).Text
+            switch currentPriority {
+            case "off":
+                core.ChangeFilePriority(f.num, f.torrentID, "low", true, session)
+                f.update(session)
+            case "low":
+                core.ChangeFilePriority(f.num, f.torrentID, "normal", true, session)
+                f.update(session)
+            case "normal":
+                core.ChangeFilePriority(f.num, f.torrentID, "high", true, session)
+                f.update(session)
+            }
             return nil
         }
         return event

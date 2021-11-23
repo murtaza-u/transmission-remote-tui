@@ -71,7 +71,7 @@ func setKeys(session *core.Session) {
     tui.torrents.setKeys(session)
     tui.navigation.setKeys()
     tui.peers.setKeys()
-    tui.files.setKeys()
+    tui.files.setKeys(session)
 }
 
 func Run(session *core.Session) {
