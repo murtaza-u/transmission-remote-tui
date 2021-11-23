@@ -126,6 +126,8 @@ type Torrent struct {
     Files                   []File         `json:"files"`
     PieceCount              int64          `json:"pieceCount"`
     PieceSize               int64          `json:"pieceSize"`
+    Priorities              []int          `json:"priorities"`
+    Wanted                  []int          `json:"wanted"`
 }
 
 var TorrentStatus map[int]string = map[int]string{

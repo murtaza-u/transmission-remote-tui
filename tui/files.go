@@ -1,6 +1,8 @@
 package tui
 
 import (
+	"strings"
+
 	"github.com/Murtaza-Udaipurwala/trt/core"
 	"github.com/gdamore/tcell/v2"
 	"github.com/rivo/tview"
@@ -18,7 +20,7 @@ func initFiles() *Files {
 }
 
 func (f *Files) setHeaders() {
-    var headers []string = []string { "Name", "Total Size", "Downloaded" }
+    var headers []string = []string { "Total Size", "Downloaded", "Priority", "Name" }
     for col, header := range headers {
         f.widget.SetCell(0, col, tview.NewTableCell(header).
                                        SetSelectable(false).
@@ -27,7 +29,7 @@ func (f *Files) setHeaders() {
     }
 }
 
-var filesFields []string = []string { "id", "files" }
+var filesFields []string = []string { "id", "files", "wanted", "priorities", "name" }
 
 func (f *Files) update(session *core.Session) {
     torrent, err := core.GetTorrentByID(session, tui.id, filesFields)
@@ -38,14 +40,37 @@ func (f *Files) update(session *core.Session) {
     }
 
     files := torrent.Files
+    priorities := torrent.Priorities
+    wanted := torrent.Wanted
+
     for row, file := range files {
         size := parseBytes(float64(file.Length))
         downloaded := parseBytes(float64(file.BytesCompleted))
-        name := file.Name
 
-        f.widget.SetCell(row + 1, 0, tview.NewTableCell(name))
-        f.widget.SetCell(row + 1, 1, tview.NewTableCell(size))
-        f.widget.SetCell(row + 1, 2, tview.NewTableCell(downloaded))
+        splits := strings.Split(file.Name, "/")
+        if splits[0] == torrent.Name {
+            splits = append(splits[:0], splits[0 + 1:]...)
+        }
+        name := strings.Join(splits, "/")
+
+        var priority string
+        switch priorities[row] {
+        case -1:
+            priority = "Low"
+        case 0:
+            priority = "Normal"
+        case 1:
+            priority = "High"
+        }
+
+        if wanted[row] == 0 {
+            priority = "Off"
+        }
+
+        f.widget.SetCell(row + 1, 0, tview.NewTableCell(size))
+        f.widget.SetCell(row + 1, 1, tview.NewTableCell(downloaded))
+        f.widget.SetCell(row + 1, 2, tview.NewTableCell(priority))
+        f.widget.SetCell(row + 1, 3, tview.NewTableCell(name))
     }
 }
 
