@@ -48,7 +48,7 @@ func (f *Files) update(session *core.Session) {
         downloaded := parseBytes(float64(file.BytesCompleted))
 
         splits := strings.Split(file.Name, "/")
-        if splits[0] == torrent.Name {
+        if splits[0] == torrent.Name && len(files) != 1 {
             splits = append(splits[:0], splits[0 + 1:]...)
         }
         name := strings.Join(splits, "/")

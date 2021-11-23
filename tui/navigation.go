@@ -56,6 +56,8 @@ func (nav *Navigation) setKeys() {
         switch event.Rune() {
         case 'q':
             currentWidget = "torrents"
+            tui.files.widget.Clear()
+            tui.peers.widget.Clear()
             tui.pages.RemovePage("details")
             return nil
 
