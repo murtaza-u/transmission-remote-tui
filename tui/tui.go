@@ -1,11 +1,11 @@
 package tui
 
 import (
-    "log"
-    "time"
+	"log"
+	"time"
 
-    "github.com/Murtaza-Udaipurwala/trt/core"
-    "github.com/rivo/tview"
+	"github.com/Murtaza-Udaipurwala/trt/core"
+	"github.com/rivo/tview"
 )
 
 type TUI struct {
@@ -49,10 +49,9 @@ func redraw(session *core.Session) {
     case "files":
         return
     case "peers":
-        return
+        tui.peers.update(session)
     case "trackers":
         tui.trackers.update(session)
-        return
     }
 }
 
@@ -62,8 +61,9 @@ func Run(session *core.Session) {
     tui.pages.AddPage("torrents", tui.torrents.widget, true, true)
 
     tui.navigation.setHeaders()
+
     tui.layout.AddItem(tui.navigation.widget, 1, 1, true)
-    tui.layout.AddItem(tui.overview.widget, 0, 1, true)
+    tui.layout.AddItem(tui.overview.widget, 0, 1, false)
 
     tui.torrents.setHeaders()
 

@@ -8,6 +8,6 @@ type Files struct {
 
 func initFiles() *Files {
     return &Files{
-        widget: tview.NewTable(),
+        widget: tview.NewTable().SetSelectable(true, false).SetFixed(1, 1),
     }
 }
