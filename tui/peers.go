@@ -87,6 +87,14 @@ func (p *Peers) setKeys() {
             setSelectedCellStyle(tui.navigation.widget,
                                  tcell.StyleDefault.Background(tcell.ColorWhite).  Foreground(tcell.ColorBlack))
             return nil
+
+        case 'g':
+            p.widget.Select(1, 0)
+            return nil
+
+        case 'G':
+            p.widget.Select(p.widget.GetRowCount() - 1, 0)
+            return nil
         }
         return event
     })

@@ -72,6 +72,14 @@ func (f *Files) setKeys() {
             setSelectedCellStyle(tui.navigation.widget,
                                  tcell.StyleDefault.Background(tcell.ColorWhite).  Foreground(tcell.ColorBlack))
             return nil
+
+        case 'g':
+            f.widget.Select(1, 0)
+            return nil
+
+        case 'G':
+            f.widget.Select(f.widget.GetRowCount() - 1, 0)
+            return nil
         }
         return event
     })

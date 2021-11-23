@@ -14,9 +14,8 @@ type Overview struct {
 var overviewFields []string = []string {
     "name", "downloadDir", "isPrivate", "addedDate", "activityDate",
     "dateCreated", "startDate", "doneDate", "comment", "creator", "hashString",
-    "totalSize", "leftUntilDone", "pieceCount", "pieceSize", "seedRatioLimit",
-    "seedRatioMode", "uploadLimit", "downloadLimit", "uploadLimited",
-    "downloadLimited", "files", "id",
+    "totalSize", "leftUntilDone", "pieceCount", "pieceSize", "uploadLimit",
+    "downloadLimit", "uploadLimited", "downloadLimited", "files", "id",
 }
 
 func (overview *Overview) update(session *core.Session) {
@@ -54,7 +53,7 @@ func (overview *Overview) update(session *core.Session) {
     id := torrent.ID
     filesCount := len(torrent.Files)
 
-    var downloadLimit, uploadLimit, seedRatioLimit string
+    var downloadLimit, uploadLimit string
 
     if torrent.DownloadLimited {
         downloadLimit = fmt.Sprint(torrent.DownloadLimit)
@@ -66,15 +65,6 @@ func (overview *Overview) update(session *core.Session) {
         uploadLimit = fmt.Sprint(torrent.UploadLimit)
     } else {
         uploadLimit = "No limit"
-    }
-
-    switch torrent.SeedRatioMode {
-    case 0:
-        seedRatioLimit = ""
-    case 1:
-        seedRatioLimit = fmt.Sprint(torrent.SeedRatioLimit)
-    case 2:
-        seedRatioLimit = "No limit"
     }
 
     var content string
@@ -92,7 +82,6 @@ func (overview *Overview) update(session *core.Session) {
 
     content += fmt.Sprintf("\n\tDownload limit:    %v", downloadLimit)
     content += fmt.Sprintf("\n\tUpload limit:      %v", uploadLimit)
-    content += fmt.Sprintf("\n\tSeed ratio limit:  %v", seedRatioLimit)
 
     content += "\n\n=============================================================================\n"
 

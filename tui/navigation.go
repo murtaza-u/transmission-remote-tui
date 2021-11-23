@@ -72,14 +72,16 @@ func (nav *Navigation) setKeys() {
                 return nil
 
             case "peers":
-                tui.app.SetFocus(tui.peers.widget)
-                setSelectedCellStyle(tui.navigation.widget,
-                                     tcell.StyleDefault.Background(tcell.ColorBlack))
+                if tui.peers.widget.GetRowCount() > 0 {
+                    tui.app.SetFocus(tui.peers.widget)
+                    setSelectedCellStyle(tui.navigation.widget,
+                                         tcell.StyleDefault.Background(tcell.ColorBlack))
 
-                setSelectedCellStyle(tui.peers.widget,
-                                     tcell.StyleDefault.Background(tcell.ColorWhite).Foreground(tcell.ColorBlack))
+                    setSelectedCellStyle(tui.peers.widget,
+                                         tcell.StyleDefault.Background(tcell.ColorWhite).Foreground(tcell.ColorBlack))
 
-                return nil
+                    return nil
+                }
 
             case "files":
                 tui.app.SetFocus(tui.files.widget)
@@ -102,6 +104,28 @@ func (nav *Navigation) setKeys() {
             case "trackers":
                 row, col := tui.trackers.widget.GetScrollOffset()
                 tui.trackers.widget.ScrollTo(row - 1, col)
+                return nil
+            }
+
+        case 'g':
+            switch currentWidget {
+            case "overview":
+                tui.overview.widget.ScrollToBeginning()
+                return nil
+
+            case "trackers":
+                tui.trackers.widget.ScrollToBeginning()
+                return nil
+            }
+
+        case 'G':
+            switch currentWidget {
+            case "overview":
+                tui.overview.widget.ScrollToEnd()
+                return nil
+
+            case "trackers":
+                tui.trackers.widget.ScrollToEnd()
                 return nil
             }
         }
