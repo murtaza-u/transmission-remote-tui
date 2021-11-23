@@ -15,13 +15,35 @@ func setKeys(session *core.Session) {
             return nil
 
         case 'j':
-            row, col := tui.overview.widget.GetScrollOffset()
-            tui.overview.widget.ScrollTo(row + 1, col)
+            switch currentWidget {
+            case "overview":
+                row, col := tui.overview.widget.GetScrollOffset()
+                tui.overview.widget.ScrollTo(row + 1, col)
+
+            case "trackers":
+                row, col := tui.trackers.widget.GetScrollOffset()
+                tui.trackers.widget.ScrollTo(row + 1, col)
+
+            case "peers":
+                row, col := tui.peers.widget.GetScrollOffset()
+                tui.peers.widget.ScrollTo(row + 1, col)
+            }
             return nil
 
         case 'k':
-            row, col := tui.overview.widget.GetScrollOffset()
-            tui.overview.widget.ScrollTo(row - 1, col)
+            switch currentWidget {
+            case "overview":
+                row, col := tui.overview.widget.GetScrollOffset()
+                tui.overview.widget.ScrollTo(row - 1, col)
+
+            case "trackers":
+                row, col := tui.trackers.widget.GetScrollOffset()
+                tui.trackers.widget.ScrollTo(row - 1, col)
+
+            case "peers":
+                row, col := tui.peers.widget.GetScrollOffset()
+                tui.peers.widget.ScrollTo(row - 1, col)
+            }
             return nil
         }
 

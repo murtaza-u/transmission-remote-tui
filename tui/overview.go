@@ -79,31 +79,40 @@ func (overview *Overview) update(session *core.Session) {
     }
 
     var content string
-    content += fmt.Sprintf("\nName: %v", name)
-    content += fmt.Sprintf("\nID: %v", id)
-    content += fmt.Sprintf("\nHash: %v", hash)
-    content += fmt.Sprintf("\nLocation: %v", location)
-    content += fmt.Sprintf("\nTotal Size: %v", size)
-    content += fmt.Sprintf("\nLeft until done: %v", left)
-    content += fmt.Sprintf("\nChunks: %v (around %v each)", pieceCount, pieceSize)
-    content += fmt.Sprintf("\nPrivacy: %v", privacy)
-    content += fmt.Sprintf("\nNo. of Files: %v", filesCount)
-    content += fmt.Sprintf("\nDownload limit: %v", downloadLimit)
-    content += fmt.Sprintf("\nUpload limit: %v", uploadLimit)
-    content += fmt.Sprintf("\nSeed ratio limit: %v", seedRatioLimit)
-    content += fmt.Sprintf("\nComment: %v", comment)
-    content += fmt.Sprintf("\nCreator: %v", creator)
-    content += fmt.Sprintf("\nCreated: %v %v", creationDate, creationDateAgo)
-    content += fmt.Sprintf("\nAdded: %v %v", addedDate, addedDateAgo)
-    content += fmt.Sprintf("\nstarted: %v %v", startDate, startDateAgo)
-    content += fmt.Sprintf("\nactivity: %v %v", activityDate, activityDateAgo)
-    content += fmt.Sprintf("\ncompletion: %v %v", completionDate, completionDateAgo)
+    content += fmt.Sprintf("\n\tName:              %v", name)
+    content += fmt.Sprintf("\n\tID:                %v", id)
+    content += fmt.Sprintf("\n\tHash:              %v", hash)
+    content += fmt.Sprintf("\n\tLocation:          %v", location)
+    content += fmt.Sprintf("\n\tTotal Size:        %v", size)
+    content += fmt.Sprintf("\n\tLeft until done:   %v", left)
+    content += fmt.Sprintf("\n\tChunks:            %v (around %v each)", pieceCount, pieceSize)
+    content += fmt.Sprintf("\n\tPrivacy:           %v", privacy)
+    content += fmt.Sprintf("\n\tNo. of Files:      %v", filesCount)
+
+    content += "\n\n=============================================================================\n"
+
+    content += fmt.Sprintf("\n\tDownload limit:    %v", downloadLimit)
+    content += fmt.Sprintf("\n\tUpload limit:      %v", uploadLimit)
+    content += fmt.Sprintf("\n\tSeed ratio limit:  %v", seedRatioLimit)
+
+    content += "\n\n=============================================================================\n"
+
+    content += fmt.Sprintf("\n\tComment:           %v", comment)
+    content += fmt.Sprintf("\n\tCreator:           %v", creator)
+
+    content += "\n\n=============================================================================\n"
+
+    content += fmt.Sprintf("\n\tCreated at:        %v %v", creationDate, creationDateAgo)
+    content += fmt.Sprintf("\n\tAdded at:          %v %v", addedDate, addedDateAgo)
+    content += fmt.Sprintf("\n\tstarted at:        %v %v", startDate, startDateAgo)
+    content += fmt.Sprintf("\n\tactivity at:       %v %v", activityDate, activityDateAgo)
+    content += fmt.Sprintf("\n\tcompleted at:      %v %v", completionDate, completionDateAgo)
 
     overview.widget.SetText(content)
 }
 
 func initOverview() *Overview {
     return &Overview{
-        widget: tview.NewTextView().SetScrollable(true),
+        widget: tview.NewTextView().SetScrollable(true).SetWrap(true),
     }
 }

@@ -60,6 +60,10 @@ func convertUnixTime(t int64) (string, string) {
     local := time.Unix(t, 0)
     currentTime := time.Now()
     diff := currentTime.Sub(local)
+    if diff < 0 {
+        diff = local.Sub(currentTime)
+        return local.String(), fmt.Sprintf("[in %s]", parseTime(diff.Seconds()))
+    }
 
     return local.String(), fmt.Sprintf("[%s ago]", parseTime(diff.Seconds()))
 }

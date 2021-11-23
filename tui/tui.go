@@ -49,6 +49,7 @@ func redraw(session *core.Session) {
     case "peers":
         return
     case "trackers":
+        tui.trackers.update(session)
         return
     }
 }
