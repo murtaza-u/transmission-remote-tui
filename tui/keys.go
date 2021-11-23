@@ -1,15 +1,15 @@
 package tui
 
 import (
-    "github.com/Murtaza-Udaipurwala/trt/core"
-    "github.com/gdamore/tcell/v2"
+	"github.com/Murtaza-Udaipurwala/trt/core"
+	"github.com/gdamore/tcell/v2"
 )
 
 func setKeys(session *core.Session) {
     tui.torrents.setKeys(session)
-    tui.layout.SetInputCapture(func(event *tcell.EventKey) *tcell.EventKey {
+    tui.navigation.widget.SetInputCapture(func(event *tcell.EventKey) *tcell.EventKey {
         switch event.Rune() {
-        case 'q', rune(tcell.KeyESC):
+        case 'q':
             currentWidget = "torrents"
             tui.pages.RemovePage("details")
             return nil
@@ -25,6 +25,15 @@ func setKeys(session *core.Session) {
                 row, col := tui.trackers.widget.GetScrollOffset()
                 tui.trackers.widget.ScrollTo(row + 1, col)
                 return nil
+
+            case "peers":
+                tui.app.SetFocus(tui.peers.widget)
+                tui.navigation.widget.SetSelectedStyle(tcell.StyleDefault.Background(tcell.ColorBlack))
+                tui.peers.widget.SetSelectedStyle(tcell.StyleDefault.Background(tcell.ColorWhite).Foreground(tcell.ColorBlack))
+                return nil
+
+            case "files":
+                return nil
             }
 
         case 'k':
@@ -39,22 +48,6 @@ func setKeys(session *core.Session) {
                 tui.trackers.widget.ScrollTo(row - 1, col)
                 return nil
             }
-
-        case 'h':
-            _, col := tui.navigation.widget.GetSelection()
-            if col == 0 {
-                return nil
-            }
-            tui.navigation.widget.Select(0, col - 1)
-            return nil
-
-        case 'l':
-            _, col := tui.navigation.widget.GetSelection()
-            if col == tui.navigation.widget.GetColumnCount() - 1 {
-                return nil
-            }
-            tui.navigation.widget.Select(0, col + 1)
-            return nil
         }
 
         return event
@@ -71,31 +64,24 @@ func setKeys(session *core.Session) {
         return event
     })
 
-    // case "peers":
-    //     row, col := tui.peers.widget.GetSelection()
-    //     if row == tui.peers.widget.GetRowCount() - 1 {
-    //         return nil
-    //     }
-    //     tui.peers.widget.Select(row + 1, col)
 
-    // case "peers":
-    //     row, col := tui.peers.widget.GetSelection()
-    //     if row == 1 {
-    //         return nil
-    //     }
-    //     tui.peers.widget.Select(row - 1, col)
+    tui.peers.widget.SetInputCapture(func(event *tcell.EventKey) *tcell.EventKey {
+        switch event.Rune() {
+        case 'k':
+            row, _ := tui.peers.widget.GetSelection()
+            if row == 1 {
+                tui.app.SetFocus(tui.layout)
+                tui.peers.widget.SetSelectedStyle(tcell.StyleDefault.Background(tcell.ColorBlack))
+                tui.navigation.widget.SetSelectedStyle(tcell.StyleDefault.Background(tcell.ColorWhite).Foreground(tcell.ColorBlack))
+                return nil
+            }
 
-    // case 'g':
-    //     if currentWidget != "peers" {
-    //         return nil
-    //     }
-    //     tui.peers.widget.Select(1, 0)
-    //     return nil
-
-    // case 'G':
-    //     if currentWidget != "peers" {
-    //         return nil
-    //     }
-    //     tui.peers.widget.Select(tui.peers.widget.GetRowCount() - 1, 0)
-    //     return nil
+        case 'q':
+            tui.app.SetFocus(tui.layout)
+            tui.peers.widget.SetSelectedStyle(tcell.StyleDefault.Background(tcell.ColorBlack))
+            tui.navigation.widget.SetSelectedStyle(tcell.StyleDefault.Background(tcell.ColorWhite).  Foreground(tcell.ColorBlack))
+            return nil
+        }
+        return event
+    })
 }

@@ -4,6 +4,7 @@ import (
 	"fmt"
 
 	"github.com/Murtaza-Udaipurwala/trt/core"
+	"github.com/gdamore/tcell/v2"
 	"github.com/rivo/tview"
 )
 
@@ -13,7 +14,8 @@ type Peers struct {
 
 func initPeers() *Peers {
     return &Peers{
-        widget: tview.NewTable().SetSelectable(true, false).SetFixed(1, 1),
+        widget: tview.NewTable().SetSelectable(true, false).SetFixed(1, 1).
+                                 SetSelectedStyle(tcell.StyleDefault.Background(tcell.ColorBlack)),
     }
 }
 
