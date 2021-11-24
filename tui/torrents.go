@@ -55,8 +55,8 @@ func (torrents *List) update(session *core.Session) {
         name := torrent.Name
 
         var ratio string
-        if torrent.UploadRatio < 0 {
-            ratio = fmt.Sprintf("%f", torrent.UploadRatio)
+        if torrent.UploadRatio >= 0 {
+            ratio = fmt.Sprintf("%.3f", torrent.UploadRatio)
         }
 
         var peers string
