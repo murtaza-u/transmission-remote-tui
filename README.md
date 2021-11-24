@@ -2,6 +2,8 @@
 > A TUI for BitTorrent client transmission
 
 ## Installation
+- Build dependencies: `go`
+
 ```bash
 $ git clone https://github.com/Murtaza-Udaipurwala/transmission-remote-tui
 $ cd transmission-remote-tui
