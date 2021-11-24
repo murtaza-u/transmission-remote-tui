@@ -1,6 +1,13 @@
 # Transmission Remote TUI (trt)
 > A TUI for BitTorrent client transmission
 
+
+![torrent list](assets/torrents.png)
+
+![overview](assets/overview.png)
+
+![peers](assets/peers.png)
+
 ## Installation
 - Build dependencies: `go`
 
