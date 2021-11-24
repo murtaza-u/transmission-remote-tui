@@ -35,6 +35,7 @@ $ transmission-daemon &
 | r          | remove torrent                              |
 | R          | remove torrent and delete all the files     |
 | v          | verify torrent                              |
+| t          | ask trackers for more peers                 |
 
 - Changing file's priority
 

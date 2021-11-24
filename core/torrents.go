@@ -248,3 +248,7 @@ func ChangeFilePriority(fileNums []int, torrentID int, priority string, wanted b
 
     SendRequest("torrent-set", "1", args, session)
 }
+
+func AskTrackersForMorePeers(torrentID int, session *Session) {
+    SendRequest("torrent-reannounce", "1", Arguments{"id": torrentID}, session)
+}

@@ -211,6 +211,14 @@ func (torrents *List) setKeys(session *core.Session) {
             torrents.widget.Select(torrents.widget.GetRowCount() - 1, 0)
             return nil
 
+        case 't':
+            id, err := torrents.currentSelectedID()
+            if err != nil {
+                return nil
+            }
+            core.AskTrackersForMorePeers(id, session)
+            return nil
+
         case 'l', rune(tcell.KeyEnter):
             id, err := torrents.currentSelectedID()
             if err != nil {
