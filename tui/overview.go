@@ -93,7 +93,7 @@ func (overview *Overview) update(session *core.Session) {
     content += fmt.Sprintf("\n\tCreated at:        %v %v", creationDate, creationDateAgo)
     content += fmt.Sprintf("\n\tAdded at:          %v %v", addedDate, addedDateAgo)
     content += fmt.Sprintf("\n\tstarted at:        %v %v", startDate, startDateAgo)
-    content += fmt.Sprintf("\n\tactivity at:       %v %v", activityDate, activityDateAgo)
+    content += fmt.Sprintf("\n\tLast activity at:  %v %v", activityDate, activityDateAgo)
     content += fmt.Sprintf("\n\tcompleted at:      %v %v", completionDate, completionDateAgo)
 
     overview.widget.SetText(content)
