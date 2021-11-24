@@ -1,4 +1,4 @@
-# Transmission-Remote-Tui (trt)
+# Transmission Remote TUI (trt)
 > A TUI for BitTorrent client transmission
 
 ## Installation
@@ -8,21 +8,23 @@
 $ git clone https://github.com/Murtaza-Udaipurwala/transmission-remote-tui
 $ cd transmission-remote-tui
 $ make
-$ sudo make install
+$ sudo make clean install
 ```
 
 ## Usage
+- The actual binary is called `trt`
+
 - Transmission daemon must be running
 ```bash
 $ transmission-daemon &
 ```
 
-- Incase you have changed the default transmission rpc port(9091), specify the new port
+- In case you have changed the default transmission rpc port(9091), specify the new port
 ```bash
 $ trt --port <new port>
 ```
 
-- Incase you are using authentication, specify the username and password
+- In case you enabled authentication, specify the username and password
 ```bash
 $ trt --username <username> --password <password>
 ```
@@ -63,5 +65,55 @@ $ trt --username <username> --password <password>
 
 ## Uninstalling
 ```bash
-$ sudo make clean uninstall
+$ sudo make uninstall
 ```
+
+## Further reading
+
+### Setting up mimeapp entry
+- `trt` does not have the ability to read/add torrent files/magnet
+  links(however, it can be added rather easily). This is because you don't
+  really need this feature.
+
+- Simply create a mimeapp entry, telling it what to do when it finds a torrent file/magnet link
+```bash
+# File: ~/.config/mimeapps.list
+# xdg-open will use these settings to determine how to open filetypes.
+
+[Default Applications]
+
+# These .desktop entries can also be seen and changed in ~/.local/share/applications/
+x-scheme-handler/magnet=torrent.desktop;
+application/x-bittorrent=torrent.desktop;
+```
+
+- Now we must create torrent.desktop file under `~/.local/share/applications/`
+```bash
+# File: ~/.local/share/applications/torrent.desktop
+
+[Desktop Entry]
+Type=Application
+Name=Torrent
+Exec=/usr/bin/env toradd %U
+```
+
+- `toradd` is a shell script in my `PATH`. This is the script that tells
+  transmission about the torrent
+```bash
+#!/bin/sh
+
+# Mimeapp script for adding torrent to transmission-daemon, but will also start
+# the daemon first if not running.  transmission-daemon sometimes fails to take
+# remote requests in its first moments, hence the sleep.
+
+pidof transmission-daemon >/dev/null || transmission-daemon &
+sleep 3
+# notify-send "🔽 Adding Torrent"
+exec transmission-remote -a "$@"
+```
+
+[Video tutorial](https://odysee.com/@Luke:7/torrenting-setup-with-transmission:1)(the TUI program used is `transmission-remote-cli` instead of `trt`)
+
+
+#### All pull requests are welcomed
+#### Open issues for discussion/bug report
