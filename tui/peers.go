@@ -1,11 +1,11 @@
 package tui
 
 import (
-	"fmt"
+    "fmt"
 
-	"github.com/Murtaza-Udaipurwala/trt/core"
-	"github.com/gdamore/tcell/v2"
-	"github.com/rivo/tview"
+    "github.com/Murtaza-Udaipurwala/trt/core"
+    "github.com/gdamore/tcell/v2"
+    "github.com/rivo/tview"
 )
 
 type Peers struct {
@@ -75,7 +75,8 @@ func (p *Peers) setKeys() {
                                      tcell.StyleDefault.Background(tcell.ColorBlack))
 
                 setSelectedCellStyle(tui.navigation.widget,
-                                     tcell.StyleDefault.Background(tcell.ColorWhite).Foreground(tcell.ColorBlack))
+                                     tcell.StyleDefault.Background(tcell.ColorWhite).
+                                                        Foreground(tcell.ColorBlack))
                 return nil
             }
 
@@ -85,7 +86,8 @@ func (p *Peers) setKeys() {
                                  tcell.StyleDefault.Background(tcell.ColorBlack))
 
             setSelectedCellStyle(tui.navigation.widget,
-                                 tcell.StyleDefault.Background(tcell.ColorWhite).  Foreground(tcell.ColorBlack))
+                                 tcell.StyleDefault.Background(tcell.ColorWhite).
+                                                    Foreground(tcell.ColorBlack))
             return nil
 
         case 'g':

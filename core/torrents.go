@@ -199,7 +199,9 @@ func PauseStartTorrent(id int, session *Session, torrents []Torrent) {
 }
 
 func RemoveTorrent(id int, session *Session, deleteLocalData bool) {
-    SendRequest("torrent-remove", "1", Arguments{"id": id, "delete-local-data": deleteLocalData}, session)
+    SendRequest("torrent-remove", "1",
+                Arguments{"id": id, "delete-local-data": deleteLocalData},
+                session)
 }
 
 func VerifyTorrent(id int, session *Session) {
@@ -237,9 +239,11 @@ func ChangeFilePriority(fileNum, torrentID int, priority string, wanted bool, se
     var args Arguments
 
     if wanted {
-        args = Arguments{"ids": torrentID, "priority-" + priority: []int{fileNum}, "files-wanted": []int{fileNum}}
+        args = Arguments{"ids": torrentID, "priority-" + priority: []int{fileNum},
+                        "files-wanted": []int{fileNum}}
     } else {
-        args = Arguments{"ids": torrentID, "priority-" + priority: []int{fileNum}, "files-unwanted": []int{fileNum}}
+        args = Arguments{"ids": torrentID, "priority-" + priority: []int{fileNum},
+                        "files-unwanted": []int{fileNum}}
     }
 
     SendRequest("torrent-set", "1", args, session)

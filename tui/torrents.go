@@ -1,13 +1,13 @@
 package tui
 
 import (
-	"errors"
-	"fmt"
-	"strings"
+    "errors"
+    "fmt"
+    "strings"
 
-	"github.com/Murtaza-Udaipurwala/trt/core"
-	"github.com/gdamore/tcell/v2"
-	"github.com/rivo/tview"
+    "github.com/Murtaza-Udaipurwala/trt/core"
+    "github.com/gdamore/tcell/v2"
+    "github.com/rivo/tview"
 )
 
 type List struct {

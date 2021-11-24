@@ -1,12 +1,12 @@
 package tui
 
 import (
-	"fmt"
-	"math"
-	"time"
+    "fmt"
+    "math"
+    "time"
 
-	"github.com/gdamore/tcell/v2"
-	"github.com/rivo/tview"
+    "github.com/gdamore/tcell/v2"
+    "github.com/rivo/tview"
 )
 
 const (

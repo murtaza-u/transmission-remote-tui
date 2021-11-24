@@ -47,12 +47,12 @@ func (trackers *Trackers) update(session *core.Session) {
 
         content += fmt.Sprintf("\n\nTier %d", tier)
         content += fmt.Sprintf("\n\t%v", announce)
-        content += fmt.Sprintf("\n\tLast announced:     %v %v", lastAnnounceTime, lastAnnounceTimeAgo)
-        content += fmt.Sprintf("\n\tNext announce:      %v %v", nextAnnounceTime, nextAnnounceTimeAgo)
-        content += fmt.Sprintf("\n\tLast Scraped:       %v %v", lastScrapeTime, lastScrapeTimeAgo)
-        content += fmt.Sprintf("\n\tNext Scrape:        %v %v", nextScrapeTime, nextScrapeTimeAgo)
-        content += fmt.Sprintf("\n\tTracker knows:      %d seeders, %d leechers", seeders, leechers)
-        content += fmt.Sprintf("\n\tResult:             %d peers received", peers)
+        content += fmt.Sprintf("\n\tLast announced:  %v %v", lastAnnounceTime, lastAnnounceTimeAgo)
+        content += fmt.Sprintf("\n\tNext announce:   %v %v", nextAnnounceTime, nextAnnounceTimeAgo)
+        content += fmt.Sprintf("\n\tLast Scraped:    %v %v", lastScrapeTime, lastScrapeTimeAgo)
+        content += fmt.Sprintf("\n\tNext Scrape:     %v %v", nextScrapeTime, nextScrapeTimeAgo)
+        content += fmt.Sprintf("\n\tTracker knows:   %d seeders, %d leechers", seeders, leechers)
+        content += fmt.Sprintf("\n\tResult:          %d peers received", peers)
     }
 
     trackers.widget.SetText(content)

@@ -78,17 +78,17 @@ func (overview *Overview) update(session *core.Session) {
     content += fmt.Sprintf("\n\tPrivacy:           %v", privacy)
     content += fmt.Sprintf("\n\tNo. of Files:      %v", filesCount)
 
-    content += "\n\n=============================================================================\n"
+    content += "\n\n============================================================================\n"
 
     content += fmt.Sprintf("\n\tDownload limit:    %v", downloadLimit)
     content += fmt.Sprintf("\n\tUpload limit:      %v", uploadLimit)
 
-    content += "\n\n=============================================================================\n"
+    content += "\n\n============================================================================\n"
 
     content += fmt.Sprintf("\n\tComment:           %v", comment)
     content += fmt.Sprintf("\n\tCreator:           %v", creator)
 
-    content += "\n\n=============================================================================\n"
+    content += "\n\n============================================================================\n"
 
     content += fmt.Sprintf("\n\tCreated at:        %v %v", creationDate, creationDateAgo)
     content += fmt.Sprintf("\n\tAdded at:          %v %v", addedDate, addedDateAgo)

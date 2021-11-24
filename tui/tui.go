@@ -1,11 +1,11 @@
 package tui
 
 import (
-	"log"
-	"time"
+    "log"
+    "time"
 
-	"github.com/Murtaza-Udaipurwala/trt/core"
-	"github.com/rivo/tview"
+    "github.com/Murtaza-Udaipurwala/trt/core"
+    "github.com/rivo/tview"
     "github.com/gdamore/tcell/v2"
 )
 

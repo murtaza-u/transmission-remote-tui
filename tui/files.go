@@ -1,11 +1,11 @@
 package tui
 
 import (
-	"strings"
+    "strings"
 
-	"github.com/Murtaza-Udaipurwala/trt/core"
-	"github.com/gdamore/tcell/v2"
-	"github.com/rivo/tview"
+    "github.com/Murtaza-Udaipurwala/trt/core"
+    "github.com/gdamore/tcell/v2"
+    "github.com/rivo/tview"
 )
 
 type Files struct {
@@ -16,10 +16,12 @@ type Files struct {
 
 func initFiles() *Files {
     return &Files{
-        widget: tview.NewTable().SetSelectable(true, false).SetFixed(1, 1).
-                                 SetSelectedStyle(tcell.StyleDefault.Background(tcell.ColorBlack)).SetSelectionChangedFunc(func(row, column int) {
-                                     tui.files.num = row - 1
-                                 }),
+        widget: tview.NewTable().
+                    SetSelectable(true, false).SetFixed(1, 1).
+                    SetSelectedStyle(tcell.StyleDefault.Background(tcell.ColorBlack)).
+                    SetSelectionChangedFunc(func(row, column int) {
+                        tui.files.num = row - 1
+                    }),
     }
 }
 
@@ -27,9 +29,9 @@ func (f *Files) setHeaders() {
     var headers []string = []string { "Total Size", "Downloaded", "Priority", "Name" }
     for col, header := range headers {
         f.widget.SetCell(0, col, tview.NewTableCell(header).
-                                       SetSelectable(false).
-                                       SetExpansion(1).
-                                       SetTextColor(tcell.ColorYellow))
+                                        SetSelectable(false).
+                                        SetExpansion(1).
+                                        SetTextColor(tcell.ColorYellow))
     }
 }
 
@@ -59,22 +61,27 @@ func (f *Files) update(session *core.Session) {
         name := strings.Join(splits, "/")
 
         var priority string
+        var textColor tcell.Color
         switch priorities[row] {
         case -1:
             priority = "low"
+            textColor = tcell.ColorGreen
         case 0:
             priority = "normal"
+            textColor = tcell.ColorWhite
         case 1:
             priority = "high"
+            textColor = tcell.ColorRed
         }
 
         if wanted[row] == 0 {
             priority = "off"
+            textColor = tcell.ColorBlue
         }
 
         f.widget.SetCell(row + 1, 0, tview.NewTableCell(size))
         f.widget.SetCell(row + 1, 1, tview.NewTableCell(downloaded))
-        f.widget.SetCell(row + 1, 2, tview.NewTableCell(priority))
+        f.widget.SetCell(row + 1, 2, tview.NewTableCell(priority).SetTextColor(textColor))
         f.widget.SetCell(row + 1, 3, tview.NewTableCell(name))
     }
 }
@@ -90,17 +97,22 @@ func (f *Files) setKeys(session *core.Session) {
                                      tcell.StyleDefault.Background(tcell.ColorBlack))
 
                 setSelectedCellStyle(tui.navigation.widget,
-                                     tcell.StyleDefault.Background(tcell.ColorWhite).Foreground(tcell.ColorBlack))
+                                     tcell.StyleDefault.
+                                            Background(tcell.ColorWhite).
+                                            Foreground(tcell.ColorBlack))
                 return nil
             }
 
         case 'q':
             tui.app.SetFocus(tui.layout)
             setSelectedCellStyle(tui.files.widget,
-                                 tcell.StyleDefault.Background(tcell.ColorBlack))
+                                 tcell.StyleDefault.
+                                       Background(tcell.ColorBlack))
 
             setSelectedCellStyle(tui.navigation.widget,
-                                 tcell.StyleDefault.Background(tcell.ColorWhite).  Foreground(tcell.ColorBlack))
+                                 tcell.StyleDefault.
+                                        Background(tcell.ColorWhite).
+                                        Foreground(tcell.ColorBlack))
             return nil
 
         case 'g':
