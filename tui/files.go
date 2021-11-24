@@ -122,10 +122,12 @@ func (f *Files) setKeys(session *core.Session) {
 
         case 'g':
             f.widget.Select(1, 0)
+            f.widget.ScrollToBeginning()
             return nil
 
         case 'G':
             f.widget.Select(f.widget.GetRowCount() - 1, 0)
+            f.widget.ScrollToEnd()
             return nil
 
         case 'h':

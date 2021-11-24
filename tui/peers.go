@@ -92,10 +92,12 @@ func (p *Peers) setKeys() {
 
         case 'g':
             p.widget.Select(1, 0)
+            p.widget.ScrollToBeginning()
             return nil
 
         case 'G':
             p.widget.Select(p.widget.GetRowCount() - 1, 0)
+            p.widget.ScrollToEnd()
             return nil
         }
         return event
