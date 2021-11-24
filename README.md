@@ -25,7 +25,6 @@ $ transmission-daemon &
 | q          | quit / go back                              |
 | Q          | kill the transmission daemon                |
 | l, enter   | show more details about a torrent           |
-| h, l       | increase/decrease file priority             |
 | K          | move torrent up the queue                   |
 | J          | move torrent down the queue                 |
 | U          | move torrent at the top of the queue        |
@@ -34,6 +33,20 @@ $ transmission-daemon &
 | r          | remove torrent                              |
 | R          | remove torrent and delete all the files     |
 | v          | verify torrent                              |
+
+- Changing file's priority
+
+| keybinding | Action                                      |
+|------------|---------------------------------------------|
+| i, d       | increase/decrease file priority             |
+| o          | change priority of focused file to 'off'    |
+| l          | change priority of focused file to 'low'    |
+| n          | change priority of focused file to 'normal' |
+| h          | change priority of focused file to 'high'   |
+| O          | change priority of all files to 'off'       |
+| L          | change priority of all files to 'low'       |
+| N          | change priority of all files to 'normal'    |
+| H          | change priority of all files to 'high'      |
 
 ## Uninstalling
 ```bash
