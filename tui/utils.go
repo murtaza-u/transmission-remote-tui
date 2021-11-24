@@ -2,7 +2,6 @@ package tui
 
 import (
     "fmt"
-    "math"
     "time"
 
     "github.com/gdamore/tcell/v2"
@@ -10,22 +9,21 @@ import (
 )
 
 const (
-    _ = iota * 3
-    KB
-    MB
-    GB
-    TB
+    KB = 1024
+    MB = 1048576
+    GB = 1073741824
+    TB = 1099511627776
 )
 
 func parseBytes(b float64) string {
-    if b >= math.Pow(10, TB) {
-        return fmt.Sprintf("%.2f TB", b * math.Pow(10, -TB))
-    } else if b >= math.Pow(10, GB) {
-        return fmt.Sprintf("%.2f GB", b * math.Pow(10, -GB))
-    } else if b >= math.Pow(10, MB) {
-        return fmt.Sprintf("%.2f MB", b * math.Pow(10, -MB))
+    if b >= TB {
+        return fmt.Sprintf("%.2f TB", b / TB)
+    } else if b >= GB {
+        return fmt.Sprintf("%.2f GB", b / GB)
+    } else if b >= MB {
+        return fmt.Sprintf("%.2f MB", b / MB)
     } else {
-        return fmt.Sprintf("%.2f KB", b * math.Pow(10, -KB))
+        return fmt.Sprintf("%.2f KB", b / KB)
     }
 }
 
