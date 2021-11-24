@@ -17,6 +17,16 @@ $ sudo make install
 $ transmission-daemon &
 ```
 
+- Incase you have changed the default transmission rpc port(9091), specify the new port
+```bash
+$ trt --port <new port>
+```
+
+- Incase you are using authentication, specify the username and password
+```bash
+$ trt --username <username> --password <password>
+```
+
 - Navigation
 
 | keybinding | Action                                      |
