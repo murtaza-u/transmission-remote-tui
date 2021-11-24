@@ -9,8 +9,6 @@ import (
     "net/http"
 )
 
-const URL = "http://127.0.0.1:9091/transmission/rpc"
-
 const (
     TagTorrentList = 7
     TagTorrentDetails = 77
@@ -42,7 +40,8 @@ func SendRequest(method, tag string, arguments Arguments, session *Session) Resp
     var body []byte
 
     for {
-        request, err := http.NewRequest("POST", URL, requestBody)
+        request, err := http.NewRequest("POST", session.URL, requestBody)
+        request.SetBasicAuth(session.Username, session.Password)
         HandleError(err)
 
         request.Header.Add("X-Transmission-Session-Id", session.ID)
