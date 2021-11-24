@@ -94,11 +94,11 @@ application/x-bittorrent=torrent.desktop;
 [Desktop Entry]
 Type=Application
 Name=Torrent
-Exec=/usr/bin/env toradd %U
+Exec=/usr/bin/env transadd %U
 ```
 
-- `toradd` is a shell script in my `PATH`. This is the script that tells
-  transmission about the torrent
+- `transadd` is a shell script in my `PATH`. This is the script that tells
+  `transmission daemon` to add our torrent
 ```bash
 #!/bin/sh
 
@@ -112,7 +112,7 @@ sleep 3
 exec transmission-remote -a "$@"
 ```
 
-[Video tutorial](https://odysee.com/@Luke:7/torrenting-setup-with-transmission:1)(the TUI program used is `transmission-remote-cli` instead of `trt`)
+[Video tutorial on setting up mimeapp entry](https://odysee.com/@Luke:7/torrenting-setup-with-transmission:1)(the TUI program used is `transmission-remote-cli` instead of `trt`)
 
 
 #### All pull requests are welcomed
