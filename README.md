@@ -16,6 +16,7 @@ $ transmission-daemon &
 ```
 
 - Navigation
+
 | keybinding | Action                                      |
 |------------|---------------------------------------------|
 | h, j, k, l | move around                                 |
