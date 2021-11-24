@@ -161,10 +161,12 @@ func (torrents *List) setKeys(session *core.Session) {
 
         case 'g':
             tui.torrents.widget.Select(1, 0)
+            tui.torrents.widget.ScrollToBeginning()
             return nil
 
         case 'G':
             tui.torrents.widget.Select(torrents.widget.GetRowCount() - 1, 0)
+            tui.torrents.widget.ScrollToEnd()
             return nil
 
         case 'K':
