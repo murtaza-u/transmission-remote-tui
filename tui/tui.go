@@ -80,7 +80,6 @@ func Run(session *core.Session) {
     tui.pages.AddPage("torrents", tui.torrents.widget, true, true)
 
     tui.navigation.setHeaders()
-    tui.files.setHeaders()
 
     tui.layout.AddItem(tui.navigation.widget, 1, 1, true)
     tui.layout.AddItem(tui.overview.widget, 0, 1, false)

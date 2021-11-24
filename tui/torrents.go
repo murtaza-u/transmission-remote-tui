@@ -218,7 +218,6 @@ func (torrents *List) setKeys(session *core.Session) {
             _, col := tui.navigation.widget.GetSelection()
             currentWidget = strings.ToLower(tui.navigation.widget.GetCell(0, col).Text)
             redraw(session)
-            tui.files.setHeaders()
             tui.pages.AddAndSwitchToPage("details", tui.layout, true)
             return nil
         }

@@ -45,8 +45,13 @@ func (f *Files) update(session *core.Session) {
         tui.pages.RemovePage("details")
     }
 
-    f.torrentID = torrent.ID
     files := torrent.Files
+    if len(files) == 0 {
+        return
+    }
+
+    f.setHeaders()
+    f.torrentID = torrent.ID
     priorities := torrent.Priorities
     wanted := torrent.Wanted
 
