@@ -130,35 +130,76 @@ func (f *Files) setKeys(session *core.Session) {
             f.widget.ScrollToEnd()
             return nil
 
-        case 'h':
+        case 'd':
             currentPriority := f.widget.GetCell(f.num + 1, 2).Text
             switch currentPriority {
             case "low":
-                core.ChangeFilePriority(f.num, f.torrentID, "low", false, session)
+                core.ChangeFilePriority([]int{f.num}, f.torrentID, "low", false, session)
                 f.update(session)
             case "normal":
-                core.ChangeFilePriority(f.num, f.torrentID, "low", true, session)
+                core.ChangeFilePriority([]int{f.num}, f.torrentID, "low", true, session)
                 f.update(session)
             case "high":
-                core.ChangeFilePriority(f.num, f.torrentID, "normal", true, session)
+                core.ChangeFilePriority([]int{f.num}, f.torrentID, "normal", true, session)
                 f.update(session)
             }
             return nil
 
-        case 'l':
+        case 'i':
             currentPriority := f.widget.GetCell(f.num + 1, 2).Text
             switch currentPriority {
             case "off":
-                core.ChangeFilePriority(f.num, f.torrentID, "low", true, session)
+                core.ChangeFilePriority([]int{f.num}, f.torrentID, "low", true, session)
                 f.update(session)
             case "low":
-                core.ChangeFilePriority(f.num, f.torrentID, "normal", true, session)
+                core.ChangeFilePriority([]int{f.num}, f.torrentID, "normal", true, session)
                 f.update(session)
             case "normal":
-                core.ChangeFilePriority(f.num, f.torrentID, "high", true, session)
+                core.ChangeFilePriority([]int{f.num}, f.torrentID, "high", true, session)
                 f.update(session)
             }
             return nil
+
+        case 'o':
+            core.ChangeFilePriority([]int{f.num}, f.torrentID, "low", false, session)
+            f.update(session)
+        case 'l':
+            core.ChangeFilePriority([]int{f.num}, f.torrentID, "low", true, session)
+            f.update(session)
+        case 'n':
+            core.ChangeFilePriority([]int{f.num}, f.torrentID, "normal", true, session)
+            f.update(session)
+        case 'h':
+            core.ChangeFilePriority([]int{f.num}, f.torrentID, "high", true, session)
+            f.update(session)
+
+        case 'O':
+            var fileNums []int
+            for num := 0; num < f.widget.GetRowCount() - 2; num ++ {
+                fileNums = append(fileNums, num)
+            }
+            core.ChangeFilePriority(fileNums, f.torrentID, "low", false, session)
+            f.update(session)
+        case 'L':
+            var fileNums []int
+            for num := 0; num < f.widget.GetRowCount() - 2; num ++ {
+                fileNums = append(fileNums, num)
+            }
+            core.ChangeFilePriority(fileNums, f.torrentID, "low", true, session)
+            f.update(session)
+        case 'N':
+            var fileNums []int
+            for num := 0; num < f.widget.GetRowCount() - 2; num ++ {
+                fileNums = append(fileNums, num)
+            }
+            core.ChangeFilePriority(fileNums, f.torrentID, "normal", true, session)
+            f.update(session)
+        case 'H':
+            var fileNums []int
+            for num := 0; num < f.widget.GetRowCount() - 2; num ++ {
+                fileNums = append(fileNums, num)
+            }
+            core.ChangeFilePriority(fileNums, f.torrentID, "high", true, session)
         }
         return event
     })

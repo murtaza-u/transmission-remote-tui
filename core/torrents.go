@@ -235,15 +235,15 @@ func GetSeedersLeechers(trackerStats []TrackerStats) (string, string) {
     return fmt.Sprint(seeders), fmt.Sprint(leechers)
 }
 
-func ChangeFilePriority(fileNum, torrentID int, priority string, wanted bool, session *Session) {
+func ChangeFilePriority(fileNums []int, torrentID int, priority string, wanted bool, session *Session) {
     var args Arguments
 
     if wanted {
-        args = Arguments{"ids": torrentID, "priority-" + priority: []int{fileNum},
-                        "files-wanted": []int{fileNum}}
+        args = Arguments{"ids": torrentID, "priority-" + priority: fileNums,
+                        "files-wanted": fileNums}
     } else {
-        args = Arguments{"ids": torrentID, "priority-" + priority: []int{fileNum},
-                        "files-unwanted": []int{fileNum}}
+        args = Arguments{"ids": torrentID, "priority-" + priority: fileNums,
+                        "files-unwanted": fileNums}
     }
 
     SendRequest("torrent-set", "1", args, session)
