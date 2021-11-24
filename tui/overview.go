@@ -15,7 +15,7 @@ var overviewFields []string = []string {
     "name", "downloadDir", "isPrivate", "addedDate", "activityDate",
     "dateCreated", "startDate", "doneDate", "comment", "creator", "hashString",
     "totalSize", "leftUntilDone", "pieceCount", "pieceSize", "uploadLimit",
-    "downloadLimit", "uploadLimited", "downloadLimited", "files", "id",
+    "downloadLimit", "uploadLimited", "downloadLimited", "files", "id", "uploadedEver",
 }
 
 func (overview *Overview) update(session *core.Session) {
@@ -51,6 +51,7 @@ func (overview *Overview) update(session *core.Session) {
     pieceCount := torrent.PieceCount
     pieceSize := parseBytes(float64(torrent.PieceSize))
     id := torrent.ID
+    uploaded := parseBytes(float64(torrent.UploadedEver))
     filesCount := len(torrent.Files)
 
     var downloadLimit, uploadLimit string
@@ -82,6 +83,7 @@ func (overview *Overview) update(session *core.Session) {
 
     content += fmt.Sprintf("\n\tDownload limit:    %v", downloadLimit)
     content += fmt.Sprintf("\n\tUpload limit:      %v", uploadLimit)
+    content += fmt.Sprintf("\n\tUploaded:          %v", uploaded)
 
     content += "\n\n============================================================================\n"
 
