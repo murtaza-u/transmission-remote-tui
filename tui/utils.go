@@ -68,7 +68,7 @@ func convertUnixTime(t int64) (string, string) {
     }
 
     parsedTime := parseTime(diff.Seconds())
-    if parsedTime == "1s" {
+    if parsedTime == "0s" || parsedTime == "1s" {
         return local.String(), "[now]"
     }
 
