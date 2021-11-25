@@ -3,11 +3,11 @@
 
 
 ![torrent list](assets/torrents.png)
-<figcaption align = "center"><b>Yes! I am torrenting linux/bsd to evade legal issues</b></figcaption>
-
-![overview](assets/overview.png)
 
 ![peers](assets/peers.png)
+
+![overview](assets/overview.png)
+<figcaption align = "center"><b><sup>*</sup>Yes! I am torrenting linux/bsd to evade legal issues</b></figcaption>
 
 ## Installation
 - Build dependencies: `go`
