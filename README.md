@@ -3,6 +3,7 @@
 
 
 ![torrent list](assets/torrents.png)
+<figcaption align = "center"><b>Yes! I am torrenting linux/bsd to evade legal issues</b></figcaption>
 
 ![overview](assets/overview.png)
 
@@ -55,6 +56,7 @@ $ trt --username <username> --password <password>
 | R          | remove torrent and delete all the files     |
 | v          | verify torrent                              |
 | t          | ask trackers for more peers                 |
+| m          | copy magnet link to clipboard               |
 
 - Changing file's priority
 
