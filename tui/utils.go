@@ -50,6 +50,9 @@ func parseTime(s float64) string {
     } else if hours >= 24 {
         return fmt.Sprintf("%d day(s)", int(hours / 24))
     } else {
+        if diff.Seconds() == 0 {
+            return ""
+        }
         return diff.String()
     }
 }
@@ -68,7 +71,7 @@ func convertUnixTime(t int64) (string, string) {
     }
 
     parsedTime := parseTime(diff.Seconds())
-    if parsedTime == "0s" || parsedTime == "1s" {
+    if parsedTime == "" || parsedTime == "1s" {
         return local.String(), "[now]"
     }
 
