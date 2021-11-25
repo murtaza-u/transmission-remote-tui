@@ -85,7 +85,7 @@ type Torrent struct {
     AddedDate               int64          `json:"addedDate"`
     BandwidthPriority       int            `json:"bandwidthPriority"`
     Comment                 string         `json:"comment"`
-    CorruptEver             int            `json:"corruptEver"`
+    CorruptEver             int64          `json:"corruptEver"`
     Creator                 string         `json:"creator"`
     DateCreated             int64          `json:"dateCreated"`
     DesiredAvailable        int            `json:"desiredAvailable"`
