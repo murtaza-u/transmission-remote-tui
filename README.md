@@ -10,6 +10,14 @@
 <figcaption align = "center"><b><sup>*</sup>Yes! I am torrenting linux/bsd to evade legal issues</b></figcaption>
 
 ## Installation
+
+#### Arch Linux
+- `trt` is available in the AUR(packaged by the developer himself)
+```bash
+$ yay -S transmission-remote-tui-git
+```
+
+#### From source
 - Build dependencies: `go`
 
 ```bash
