@@ -8,6 +8,7 @@ import (
     "github.com/Murtaza-Udaipurwala/trt/core"
     "github.com/gdamore/tcell/v2"
     "github.com/rivo/tview"
+    "golang.design/x/clipboard"
 )
 
 type List struct {
@@ -38,7 +39,7 @@ func initTorrents() *List {
 var torrentFields []string = []string {
     "id", "name", "status", "eta", "uploadRatio", "peersConnected",
     "totalSize", "rateUpload", "rateDownload", "leftUntilDone","queuePosition",
-    "bandwidthPriority", "trackerStats",
+    "bandwidthPriority", "trackerStats", "magnetLink",
 }
 
 func (torrents *List) update(session *core.Session) {
@@ -217,6 +218,15 @@ func (torrents *List) setKeys(session *core.Session) {
                 return nil
             }
             core.AskTrackersForMorePeers(id, session)
+            return nil
+
+        case 'm':
+            torrent, err := torrents.currentSelected()
+            if err != nil {
+                return nil
+            }
+            magnetLink := torrent.MagnetLink
+            clipboard.Write(clipboard.FmtText, []byte(magnetLink))
             return nil
 
         case 'l', rune(tcell.KeyEnter):
