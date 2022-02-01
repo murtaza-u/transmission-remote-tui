@@ -1,105 +1,105 @@
 package tui
 
 import (
-    "fmt"
+	"fmt"
 
-    "github.com/Murtaza-Udaipurwala/trt/core"
-    "github.com/gdamore/tcell/v2"
-    "github.com/rivo/tview"
+	"github.com/Murtaza-Udaipurwala/trt/core"
+	"github.com/gdamore/tcell/v2"
+	"github.com/rivo/tview"
 )
 
 type Peers struct {
-    widget *tview.Table
+	widget *tview.Table
 }
 
 func initPeers() *Peers {
-    return &Peers{
-        widget: tview.NewTable().SetSelectable(true, false).SetFixed(1, 1).
-                                 SetSelectedStyle(tcell.StyleDefault.Background(tcell.ColorBlack)),
-    }
+	return &Peers{
+		widget: tview.NewTable().SetSelectable(true, false).SetFixed(1, 1).
+			SetSelectedStyle(tcell.StyleDefault.Background(tcell.ColorBlack)),
+	}
 }
 
 func (p *Peers) setHeaders() {
-    var headers []string = []string {
-        "Flag", "Progress", "Client", "Address", "Port",
-    }
+	var headers []string = []string{
+		"Flag", "Progress", "Client", "Address", "Port",
+	}
 
-    for col, header := range headers {
-        p.widget.SetCell(0, col, tview.NewTableCell(header).
-                                       SetSelectable(false).
-                                       SetExpansion(1).
-                                       SetTextColor(tcell.ColorYellow))
-    }
+	for col, header := range headers {
+		p.widget.SetCell(0, col, tview.NewTableCell(header).
+			SetSelectable(false).
+			SetExpansion(1).
+			SetTextColor(tcell.ColorYellow))
+	}
 }
 
-var peersFields []string = []string { "peers", "id" }
+var peersFields []string = []string{"peers", "id"}
 
 func (p *Peers) update(session *core.Session) {
-    torrent, err := core.GetTorrentByID(session, tui.id,  peersFields)
-    if err != nil {
-        currentWidget = "torrents"
-        redraw(session)
-        tui.pages.RemovePage("details")
-    }
+	torrent, err := core.GetTorrentByID(session, tui.id, peersFields)
+	if err != nil {
+		currentWidget = "torrents"
+		redraw(session)
+		tui.pages.RemovePage("details")
+	}
 
-    if len(torrent.Peers) == 0 {
-        p.widget.Clear()
-        return
-    }
+	if len(torrent.Peers) == 0 {
+		p.widget.Clear()
+		return
+	}
 
-    p.setHeaders()
+	p.setHeaders()
 
-    for row, peer := range torrent.Peers {
-        flag := peer.FlagStr
-        address := peer.Address
-        client := peer.ClientName
-        port := fmt.Sprint(peer.Port)
-        progress := fmt.Sprintf("%d%%", peer.Progress * 100)
+	for row, peer := range torrent.Peers {
+		flag := peer.FlagStr
+		address := peer.Address
+		client := peer.ClientName
+		port := fmt.Sprint(peer.Port)
+		progress := fmt.Sprintf("%d%%", peer.Progress*100)
 
-        p.widget.SetCell(row + 1, 0, tview.NewTableCell(flag).SetExpansion(1))
-        p.widget.SetCell(row + 1, 1, tview.NewTableCell(progress).SetExpansion(1))
-        p.widget.SetCell(row + 1, 2, tview.NewTableCell(client).SetExpansion(1))
-        p.widget.SetCell(row + 1, 3, tview.NewTableCell(address).SetExpansion(1))
-        p.widget.SetCell(row + 1, 4, tview.NewTableCell(port).SetExpansion(1))
-    }
+		p.widget.SetCell(row+1, 0, tview.NewTableCell(flag).SetExpansion(1))
+		p.widget.SetCell(row+1, 1, tview.NewTableCell(progress).SetExpansion(1))
+		p.widget.SetCell(row+1, 2, tview.NewTableCell(client).SetExpansion(1))
+		p.widget.SetCell(row+1, 3, tview.NewTableCell(address).SetExpansion(1))
+		p.widget.SetCell(row+1, 4, tview.NewTableCell(port).SetExpansion(1))
+	}
 }
 
 func (p *Peers) setKeys() {
-    tui.peers.widget.SetInputCapture(func(event *tcell.EventKey) *tcell.EventKey {
-        switch event.Rune() {
-        case 'k':
-            row, _ := tui.peers.widget.GetSelection()
-            if row == 1 {
-                tui.app.SetFocus(tui.layout)
-                setSelectedCellStyle(tui.peers.widget,
-                                     tcell.StyleDefault.Background(tcell.ColorBlack))
+	tui.peers.widget.SetInputCapture(func(event *tcell.EventKey) *tcell.EventKey {
+		switch event.Rune() {
+		case 'k':
+			row, _ := tui.peers.widget.GetSelection()
+			if row == 1 {
+				tui.app.SetFocus(tui.layout)
+				setSelectedCellStyle(tui.peers.widget,
+					tcell.StyleDefault.Background(tcell.ColorBlack))
 
-                setSelectedCellStyle(tui.navigation.widget,
-                                     tcell.StyleDefault.Background(tcell.ColorWhite).
-                                                        Foreground(tcell.ColorBlack))
-                return nil
-            }
+				setSelectedCellStyle(tui.navigation.widget,
+					tcell.StyleDefault.Background(tcell.ColorWhite).
+						Foreground(tcell.ColorBlack))
+				return nil
+			}
 
-        case 'q':
-            tui.app.SetFocus(tui.layout)
-            setSelectedCellStyle(tui.peers.widget,
-                                 tcell.StyleDefault.Background(tcell.ColorBlack))
+		case 'q':
+			tui.app.SetFocus(tui.layout)
+			setSelectedCellStyle(tui.peers.widget,
+				tcell.StyleDefault.Background(tcell.ColorBlack))
 
-            setSelectedCellStyle(tui.navigation.widget,
-                                 tcell.StyleDefault.Background(tcell.ColorWhite).
-                                                    Foreground(tcell.ColorBlack))
-            return nil
+			setSelectedCellStyle(tui.navigation.widget,
+				tcell.StyleDefault.Background(tcell.ColorWhite).
+					Foreground(tcell.ColorBlack))
+			return nil
 
-        case 'g':
-            p.widget.Select(1, 0)
-            p.widget.ScrollToBeginning()
-            return nil
+		case 'g':
+			p.widget.Select(1, 0)
+			p.widget.ScrollToBeginning()
+			return nil
 
-        case 'G':
-            p.widget.Select(p.widget.GetRowCount() - 1, 0)
-            p.widget.ScrollToEnd()
-            return nil
-        }
-        return event
-    })
+		case 'G':
+			p.widget.Select(p.widget.GetRowCount()-1, 0)
+			p.widget.ScrollToEnd()
+			return nil
+		}
+		return event
+	})
 }
