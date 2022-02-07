@@ -31,7 +31,7 @@ func parseTime(s float64) string {
 	t := time.Unix(int64(s), 0)
 	beggining := time.Unix(0, 0)
 	diff := t.Sub(beggining)
-	if diff < 0 {
+	if diff <= 0 {
 		return ""
 	}
 
