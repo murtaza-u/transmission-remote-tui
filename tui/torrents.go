@@ -75,7 +75,7 @@ func (torrents *List) update(session *core.Session) {
 		tui.torrents.widget.SetCell(row+1, leechersCol, tview.NewTableCell(leechers))
 		tui.torrents.widget.SetCell(row+1, sizeCol, tview.NewTableCell(size))
 		tui.torrents.widget.SetCell(row+1, leftCol, tview.NewTableCell(left))
-		tui.torrents.widget.SetCell(row+1, nameCol, tview.NewTableCell(name))
+		tui.torrents.widget.SetCell(row+1, nameCol, tview.NewTableCell(name).SetMaxWidth(50))
 	}
 }
 
