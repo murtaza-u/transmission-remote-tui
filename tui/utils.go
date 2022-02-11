@@ -9,21 +9,21 @@ import (
 )
 
 const (
-	KB = 1024
-	MB = 1048576
-	GB = 1073741824
-	TB = 1099511627776
+	Kib = 1024
+	Mib = 1048576
+	Gib = 1073741824
+	Tib = 1099511627776
 )
 
 func parseBytes(b float64) string {
-	if b >= TB {
-		return fmt.Sprintf("%.2f TB", b/TB)
-	} else if b >= GB {
-		return fmt.Sprintf("%.2f GB", b/GB)
-	} else if b >= MB {
-		return fmt.Sprintf("%.2f MB", b/MB)
+	if b >= Tib {
+		return fmt.Sprintf("%.2f TiB", b/Tib)
+	} else if b >= Gib {
+		return fmt.Sprintf("%.2f GiB", b/Gib)
+	} else if b >= Mib {
+		return fmt.Sprintf("%.2f MiB", b/Mib)
 	} else {
-		return fmt.Sprintf("%.2f KB", b/KB)
+		return fmt.Sprintf("%.2f KiB", b/Kib)
 	}
 }
 

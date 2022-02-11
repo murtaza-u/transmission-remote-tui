@@ -175,28 +175,28 @@ func (f *Files) setKeys(session *core.Session) {
 
 		case 'O':
 			var fileNums []int
-			for num := 0; num < f.widget.GetRowCount()-2; num++ {
+			for num := 0; num < f.widget.GetRowCount()-1; num++ {
 				fileNums = append(fileNums, num)
 			}
 			core.ChangeFilePriority(fileNums, f.torrentID, "low", false, session)
 			f.update(session)
 		case 'L':
 			var fileNums []int
-			for num := 0; num < f.widget.GetRowCount()-2; num++ {
+			for num := 0; num < f.widget.GetRowCount()-1; num++ {
 				fileNums = append(fileNums, num)
 			}
 			core.ChangeFilePriority(fileNums, f.torrentID, "low", true, session)
 			f.update(session)
 		case 'N':
 			var fileNums []int
-			for num := 0; num < f.widget.GetRowCount()-2; num++ {
+			for num := 0; num < f.widget.GetRowCount()-1; num++ {
 				fileNums = append(fileNums, num)
 			}
 			core.ChangeFilePriority(fileNums, f.torrentID, "normal", true, session)
 			f.update(session)
 		case 'H':
 			var fileNums []int
-			for num := 0; num < f.widget.GetRowCount()-2; num++ {
+			for num := 0; num < f.widget.GetRowCount()-1; num++ {
 				fileNums = append(fileNums, num)
 			}
 			core.ChangeFilePriority(fileNums, f.torrentID, "high", true, session)
