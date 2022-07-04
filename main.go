@@ -2,6 +2,7 @@ package main
 
 import (
 	"fmt"
+	"strings"
 
 	"github.com/Murtaza-Udaipurwala/trt/cli"
 	"github.com/Murtaza-Udaipurwala/trt/core"
@@ -9,10 +10,14 @@ import (
 )
 
 func main() {
-	username, password, port := cli.ParseArgs()
+	username, password, url, port := cli.ParseArgs()
+
+	if !strings.HasPrefix(url, "http") {
+		url = "http://" + url
+	}
 
 	session := core.Session{}
-	session.URL = fmt.Sprintf("http://127.0.0.1:%d/transmission/rpc", port)
+	session.URL = fmt.Sprintf("%s:%d/transmission/rpc", url, port)
 	session.Username = username
 	session.Password = password
 	session.CompileRegex()
