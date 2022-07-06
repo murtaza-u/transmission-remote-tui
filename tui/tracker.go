@@ -27,14 +27,14 @@ func (t *trackers) redraw(s *core.Session) error {
 	}
 
 	plate := `
-	Tier %d
-	%v
-	Last announced: %v
-	Next announce:	%v
-	Last scraped:	%v
-	Next scrape:	%v
-	Tracker knows:	%d seeders, %d leechers
-	%d peers received
+    Tier %d
+    %v
+    Last announced: %v
+    Next announce:  %v
+    Last scraped:   %v
+    Next scrape:    %v
+    Tracker knows:  %d seeders, %d leechers
+    %d peers received
 	`
 
 	var txt string

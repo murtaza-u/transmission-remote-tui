@@ -70,41 +70,41 @@ func (o *overviewWid) redraw(s *core.Session) error {
 	}
 
 	plate := `
-	Name:         %v
-	ID:           %v
-	Hash:         %v
-	Location:     %v
-	Chunks:       %v (around %v each)
-	Privacy:      %v
-	No. of files: %v
+    Name:         %v
+    ID:           %v
+    Hash:         %v
+    Location:     %v
+    Chunks:       %v (around %v each)
+    Privacy:      %v
+    No. of files: %v
 
-	===========================================================================
+    ===========================================================================
 
-	Size:            %v
-	Left until done: %v
-	Downloaded:      %v
-	Verified:        %v
-	Corrupt:         %v
-	Uploaded:        %v
+    Size:            %v
+    Left until done: %v
+    Downloaded:      %v
+    Verified:        %v
+    Corrupt:         %v
+    Uploaded:        %v
 
-	===========================================================================
+    ===========================================================================
 
     Download limit: %v
     Upload limit:   %v
 
-	===========================================================================
+    ===========================================================================
 
     Comment: %v
     Creator: %v
 
-	===========================================================================
+    ===========================================================================
 
     Created at:       %s
     Added at:         %s
     Started at:       %s
     Last activity at: %s
     Completed at:     %s
-	`
+    `
 
 	txt := fmt.Sprintf(
 		plate, t.Name, t.ID, t.HashString, t.DownloadDir, t.PieceCount,
