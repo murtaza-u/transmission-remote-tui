@@ -25,7 +25,7 @@ func initPeers() *peers {
 }
 
 func (p *peers) style() {
-	p.widget.SetSelectedStyle(tcell.StyleDefault.Background(tcell.ColorWhite))
+	p.widget.SetSelectedStyle(tcell.StyleDefault.Background(tcell.ColorBlack))
 }
 
 func (p *peers) setHeaders() {

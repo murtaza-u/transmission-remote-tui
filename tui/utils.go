@@ -5,7 +5,7 @@ import (
 	"time"
 )
 
-func byteCountSI(b uint64) string {
+func byteCountSI(b int64) string {
 	const unit = 1000
 	if b < unit {
 		return fmt.Sprintf("%d B", b)
