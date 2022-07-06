@@ -1,27 +1,33 @@
 package main
 
 import (
-	"fmt"
+	"log"
 	"strings"
 
-	"github.com/Murtaza-Udaipurwala/trt/cli"
-	"github.com/Murtaza-Udaipurwala/trt/core"
-	"github.com/Murtaza-Udaipurwala/trt/tui"
+	"github.com/murtaza-u/trt/cli"
+	"github.com/murtaza-u/trt/core"
+	"github.com/murtaza-u/trt/tui"
 )
 
 func main() {
-	username, password, url, port := cli.ParseArgs()
+	f := new(cli.Flags)
+	f.Parse()
 
-	if !strings.HasPrefix(url, "http") {
-		url = "http://" + url
+	if !strings.HasPrefix(f.URL, "http") {
+		f.URL = "http://" + f.URL
 	}
 
-	session := core.Session{}
-	session.URL = fmt.Sprintf("%s:%d/transmission/rpc", url, port)
-	session.Username = username
-	session.Password = password
-	session.CompileRegex()
-	session.NewSessionID()
+	s := new(core.Session)
+	s.URL = f.URL
+	s.Username = f.Username
+	s.Password = f.Password
 
-	tui.Run(&session)
+	s.CompileRegex()
+	s.NewID()
+
+	tui := tui.InitTUI(s)
+	err := tui.Run(s)
+	if err != nil {
+		log.Fatal(err)
+	}
 }

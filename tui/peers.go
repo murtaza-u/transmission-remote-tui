@@ -3,92 +3,83 @@ package tui
 import (
 	"fmt"
 
-	"github.com/Murtaza-Udaipurwala/trt/core"
 	"github.com/gdamore/tcell/v2"
+	"github.com/murtaza-u/trt/core"
 	"github.com/rivo/tview"
 )
 
-type Peers struct {
+type peers struct {
 	widget *tview.Table
+	fields []string
 }
 
-func initPeers() *Peers {
-	return &Peers{
-		widget: tview.NewTable().SetSelectable(true, false).SetFixed(1, 1).
-			SetSelectedStyle(tcell.StyleDefault.Background(tcell.ColorBlack)),
-	}
-}
+func initPeers() *peers {
+	p := new(peers)
+	p.widget = tview.NewTable().SetSelectable(true, false).SetFixed(1, 1)
 
-func (p *Peers) setHeaders() {
-	var headers []string = []string{
-		"Flag", "Progress", "Client", "Address", "Port",
-	}
-
-	for col, header := range headers {
-		p.widget.SetCell(0, col, tview.NewTableCell(header).
-			SetSelectable(false).
-			SetExpansion(1).
-			SetTextColor(tcell.ColorYellow))
-	}
-}
-
-var peersFields []string = []string{"peers", "id"}
-
-func (p *Peers) update(session *core.Session) {
-	torrent, err := core.GetTorrentByID(session, tui.id, peersFields)
-	if err != nil {
-		currentWidget = "torrents"
-		redraw(session)
-		tui.pages.RemovePage("details")
-	}
-
-	if len(torrent.Peers) == 0 {
-		p.widget.Clear()
-		return
-	}
+	p.fields = []string{"peers", "id"}
 
 	p.setHeaders()
+	p.setKeys()
+	return p
+}
 
-	for row, peer := range torrent.Peers {
-		flag := peer.FlagStr
-		address := peer.Address
-		client := peer.ClientName
-		port := fmt.Sprint(peer.Port)
-		progress := fmt.Sprintf("%d%%", peer.Progress*100)
+func (p *peers) style() {
+	p.widget.SetSelectedStyle(tcell.StyleDefault.Background(tcell.ColorWhite))
+}
 
-		p.widget.SetCell(row+1, 0, tview.NewTableCell(flag).SetExpansion(1))
-		p.widget.SetCell(row+1, 1, tview.NewTableCell(progress).SetExpansion(1))
-		p.widget.SetCell(row+1, 2, tview.NewTableCell(client).SetExpansion(1))
-		p.widget.SetCell(row+1, 3, tview.NewTableCell(address).SetExpansion(1))
-		p.widget.SetCell(row+1, 4, tview.NewTableCell(port).SetExpansion(1))
+func (p *peers) setHeaders() {
+	var heads = []string{"Flag", "Progress", "Client", "Address", "Port"}
+
+	for col, h := range heads {
+		p.widget.SetCell(
+			0, col, tview.NewTableCell(h).SetSelectable(false).SetExpansion(1),
+		)
 	}
 }
 
-func (p *Peers) setKeys() {
-	tui.peers.widget.SetInputCapture(func(event *tcell.EventKey) *tcell.EventKey {
-		switch event.Rune() {
-		case 'k':
-			row, _ := tui.peers.widget.GetSelection()
-			if row == 1 {
-				tui.app.SetFocus(tui.layout)
-				setSelectedCellStyle(tui.peers.widget,
-					tcell.StyleDefault.Background(tcell.ColorBlack))
+func (p *peers) redraw(s *core.Session) error {
+	id := tui.torrent.currID()
+	t, err := s.GetTorrentByID(id, p.fields)
+	if err != nil {
+		return err
+	}
 
-				setSelectedCellStyle(tui.navigation.widget,
-					tcell.StyleDefault.Background(tcell.ColorWhite).
-						Foreground(tcell.ColorBlack))
+	for i, peer := range t.Peers {
+		attrs := make([]string, 0, 5)
+		attrs = append(attrs, peer.FlagStr)
+		attrs = append(attrs, fmt.Sprintf("%.2f%%", peer.Progress*100))
+		attrs = append(attrs, peer.ClientName)
+		attrs = append(attrs, peer.Address)
+		attrs = append(attrs, fmt.Sprint(peer.Port))
+
+		for col := 0; col <= 4; col++ {
+			p.widget.SetCell(
+				i+1, col, tview.NewTableCell(attrs[col]).SetExpansion(1),
+			)
+		}
+	}
+
+	for i := len(t.Peers) + 1; i < p.widget.GetRowCount(); i++ {
+		p.widget.RemoveRow(i)
+	}
+
+	return nil
+}
+
+func (p *peers) setKeys() {
+	p.widget.SetInputCapture(func(e *tcell.EventKey) *tcell.EventKey {
+		switch e.Rune() {
+		case 'q':
+			tui.layout.focus(p.widget)
+			return nil
+
+		case 'k':
+			r, _ := p.widget.GetSelection()
+			if r == 1 {
+				tui.layout.focus(p.widget)
 				return nil
 			}
-
-		case 'q':
-			tui.app.SetFocus(tui.layout)
-			setSelectedCellStyle(tui.peers.widget,
-				tcell.StyleDefault.Background(tcell.ColorBlack))
-
-			setSelectedCellStyle(tui.navigation.widget,
-				tcell.StyleDefault.Background(tcell.ColorWhite).
-					Foreground(tcell.ColorBlack))
-			return nil
 
 		case 'g':
 			p.widget.Select(1, 0)
@@ -100,6 +91,7 @@ func (p *Peers) setKeys() {
 			p.widget.ScrollToEnd()
 			return nil
 		}
-		return event
+
+		return e
 	})
 }
