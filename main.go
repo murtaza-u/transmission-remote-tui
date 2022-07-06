@@ -2,6 +2,7 @@ package main
 
 import (
 	"log"
+	"os"
 	"strings"
 
 	"github.com/murtaza-u/trt/cli"
@@ -23,10 +24,14 @@ func main() {
 	s.Password = f.Password
 
 	s.CompileRegex()
-	s.NewID()
+	err := s.NewID()
+	if err != nil {
+		log.Println(err)
+		os.Exit(1)
+	}
 
 	tui := tui.InitTUI(s)
-	err := tui.Run(s)
+	err = tui.Run(s)
 	if err != nil {
 		log.Fatal(err)
 	}

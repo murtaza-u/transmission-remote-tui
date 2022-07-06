@@ -166,3 +166,13 @@ func (s *Session) FilePriority(id int, fn []int, pri string, want bool) error {
 	_, err := s.Talk(r)
 	return err
 }
+
+func (s *Session) Close() error {
+	r := &Req{
+		Method: MethodSessionClose,
+		Tag:    TagDefault,
+		Args:   ReqArgs{},
+	}
+	_, err := s.Talk(r)
+	return err
+}

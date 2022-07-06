@@ -65,7 +65,10 @@ func (s *Session) Talk(r *Req) (*Resp, error) {
 			break
 		}
 
-		s.NewID()
+		err = s.NewID()
+		if err != nil {
+			return nil, err
+		}
 	}
 
 	v := new(Resp)

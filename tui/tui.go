@@ -4,6 +4,7 @@ import (
 	"log"
 	"time"
 
+	"github.com/gdamore/tcell/v2"
 	"github.com/murtaza-u/trt/core"
 	"github.com/rivo/tview"
 )
@@ -42,7 +43,24 @@ func InitTUI(s *core.Session) *TUI {
 		trackers: initTrackers(),
 	}
 
+	tui.setKeys(s)
 	return tui
+}
+
+func (t *TUI) setKeys(s *core.Session) {
+	tui.app.SetInputCapture(func(e *tcell.EventKey) *tcell.EventKey {
+		switch e.Rune() {
+		case 'Q':
+			err := s.Close()
+			if err != nil {
+				log.Fatal(err)
+			}
+			tui.app.Stop()
+			return nil
+		}
+
+		return e
+	})
 }
 
 func (t *TUI) redraw(s *core.Session) error {

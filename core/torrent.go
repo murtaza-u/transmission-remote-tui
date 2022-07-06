@@ -134,6 +134,7 @@ const (
 	MethodTorrentRemove     = "torrent-remove"
 	MethodTorrentVerify     = "torrent-verify"
 	MethodTorrentReannounce = "torrent-reannounce"
+	MethodSessionClose      = "session-close"
 )
 
 var ErrTorrentNotFound = errors.New("Torrent not found")
