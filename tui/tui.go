@@ -9,8 +9,6 @@ import (
 	"github.com/rivo/tview"
 )
 
-var force = make(chan struct{})
-
 const (
 	TorrentPage = "torrent"
 	DetailsPage = "details"
@@ -26,6 +24,7 @@ type TUI struct {
 	files    *files
 	peers    *peers
 	trackers *trackers
+	force    chan struct{}
 }
 
 var tui *TUI
@@ -41,6 +40,7 @@ func InitTUI(s *core.Session) *TUI {
 		files:    initFiles(s),
 		peers:    initPeers(),
 		trackers: initTrackers(),
+		force:    make(chan struct{}, 1000),
 	}
 
 	tui.setKeys(s)
@@ -82,6 +82,15 @@ func (t *TUI) redraw(s *core.Session) error {
 	return nil
 }
 
+func (t *TUI) drainForce() {
+	select {
+	case <-t.force:
+		t.drainForce()
+	default:
+		return
+	}
+}
+
 func (t *TUI) Run(s *core.Session) error {
 	t.pages.AddPage(TorrentPage, t.torrent.widget, true, true)
 	t.pages.AddPage(DetailsPage, t.layout.widget, true, false)
@@ -96,13 +105,14 @@ func (t *TUI) Run(s *core.Session) error {
 
 	go func() {
 		for {
+			t.drainForce()
 			err := t.redraw(s)
 			if err != nil {
 				log.Fatal(err)
 			}
 
 			select {
-			case <-force:
+			case <-tui.force:
 			case <-time.After(time.Second):
 			}
 		}

@@ -56,7 +56,7 @@ func (tw *torrentWid) startStopTorrent(s *core.Session) {
 	}
 
 	defer func() {
-		force <- struct{}{}
+		tui.force <- struct{}{}
 	}()
 
 	if t.IsPaused() {
@@ -81,7 +81,7 @@ func (tw *torrentWid) queueMove(s *core.Session, dir string) {
 		log.Fatal(err)
 	}
 
-	force <- struct{}{}
+	tui.force <- struct{}{}
 
 	var row int
 
@@ -111,7 +111,7 @@ func (tw *torrentWid) remove(s *core.Session, purge bool) {
 		log.Fatal(err)
 	}
 
-	force <- struct{}{}
+	tui.force <- struct{}{}
 }
 
 func (tw *torrentWid) reannounce(s *core.Session) {
@@ -120,8 +120,6 @@ func (tw *torrentWid) reannounce(s *core.Session) {
 	if err != nil {
 		log.Fatal(err)
 	}
-
-	force <- struct{}{}
 }
 
 func (tw *torrentWid) copyMangnetLink() {
@@ -140,7 +138,7 @@ func (tw *torrentWid) verify(s *core.Session) {
 		log.Fatal(err)
 	}
 
-	force <- struct{}{}
+	tui.force <- struct{}{}
 }
 
 func (tw *torrentWid) setKeys(s *core.Session) {
@@ -198,7 +196,7 @@ func (tw *torrentWid) setKeys(s *core.Session) {
 
 		case 'l':
 			tui.pages.SwitchToPage(DetailsPage)
-			force <- struct{}{}
+			tui.force <- struct{}{}
 			return nil
 
 		case 'q':

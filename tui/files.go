@@ -192,7 +192,7 @@ func (f *files) stepPri(s *core.Session, dir int) {
 		log.Fatal(err)
 	}
 
-	force <- struct{}{}
+	tui.force <- struct{}{}
 }
 
 func (f *files) setPri(s *core.Session, pri string, one bool) {
@@ -218,5 +218,5 @@ func (f *files) setPri(s *core.Session, pri string, one bool) {
 		log.Fatal(err)
 	}
 
-	force <- struct{}{}
+	tui.force <- struct{}{}
 }

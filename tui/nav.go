@@ -48,7 +48,7 @@ func initNav(s *core.Session) *navWid {
 			}
 
 			tui.layout.widget.AddItem(nav.curr, 0, 1, false)
-			force <- struct{}{}
+			tui.force <- struct{}{}
 		})
 	nav.setHeaders()
 	nav.setKeys()
@@ -121,7 +121,7 @@ func (nav *navWid) keyG() {
 
 func (nav *navWid) back() {
 	tui.pages.SwitchToPage(TorrentPage)
-	force <- struct{}{}
+	tui.force <- struct{}{}
 }
 
 func (nav *navWid) setKeys() {
