@@ -10,7 +10,8 @@ import (
 	"golang.design/x/clipboard"
 )
 
-const nameMaxWidth = 50
+// 30% of terminal width
+const nameMaxWidth = 30
 
 type torrentWid struct {
 	widget   *tview.Table
@@ -254,7 +255,7 @@ func (tw *torrentWid) redraw(s *core.Session) error {
 		for col, attr := range attrs {
 			cell := tview.NewTableCell(attr).SetSelectable(true)
 			if col == len(attrs)-1 {
-				cell.SetMaxWidth(nameMaxWidth)
+				cell.SetMaxWidth(tui.width * nameMaxWidth / 100)
 			}
 
 			tw.widget.SetCell(row+1, col, cell)

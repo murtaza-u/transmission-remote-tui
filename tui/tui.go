@@ -2,11 +2,13 @@ package tui
 
 import (
 	"log"
+	"os"
 	"time"
 
 	"github.com/gdamore/tcell/v2"
 	"github.com/murtaza-u/trt/core"
 	"github.com/rivo/tview"
+	"golang.org/x/term"
 )
 
 const (
@@ -25,11 +27,12 @@ type TUI struct {
 	peers    *peers
 	trackers *trackers
 	force    chan struct{}
+	width    int
 }
 
 var tui *TUI
 
-func InitTUI(s *core.Session) *TUI {
+func InitTUI(s *core.Session) (*TUI, error) {
 	tui = &TUI{
 		app:      tview.NewApplication(),
 		pages:    tview.NewPages(),
@@ -43,8 +46,24 @@ func InitTUI(s *core.Session) *TUI {
 		force:    make(chan struct{}, 1000),
 	}
 
+	err := tui.setWidth()
+	if err != nil {
+		return nil, err
+	}
+
+	tui.pages.AddPage(TorrentPage, tui.torrent.widget, true, true)
+	tui.pages.AddPage(DetailsPage, tui.layout.widget, true, false)
+
+	tui.layout.widget.AddItem(tui.nav.widget, 1, 1, true)
+	tui.layout.widget.AddItem(tui.overview.widget, 0, 1, false)
+
+	tui.nav.curr = tui.overview.widget
+
+	tui.files.style()
+	tui.peers.style()
+
 	tui.setKeys(s)
-	return tui
+	return tui, nil
 }
 
 func (t *TUI) setKeys(s *core.Session) {
@@ -91,18 +110,19 @@ func (t *TUI) drainForce() {
 	}
 }
 
+func (t *TUI) setWidth() error {
+	// on non-Unix systems fd may not be 0
+	fd := int(os.Stdin.Fd())
+	w, _, err := term.GetSize(fd)
+	if err != nil {
+		return err
+	}
+
+	t.width = w
+	return nil
+}
+
 func (t *TUI) Run(s *core.Session) error {
-	t.pages.AddPage(TorrentPage, t.torrent.widget, true, true)
-	t.pages.AddPage(DetailsPage, t.layout.widget, true, false)
-
-	t.layout.widget.AddItem(t.nav.widget, 1, 1, true)
-	t.layout.widget.AddItem(t.overview.widget, 0, 1, false)
-
-	t.nav.curr = tui.overview.widget
-
-	t.files.style()
-	t.peers.style()
-
 	go func() {
 		for {
 			t.drainForce()

@@ -30,7 +30,11 @@ func main() {
 		os.Exit(1)
 	}
 
-	tui := tui.InitTUI(s)
+	tui, err := tui.InitTUI(s)
+	if err != nil {
+		log.Fatal(err)
+	}
+
 	err = tui.Run(s)
 	if err != nil {
 		log.Fatal(err)
