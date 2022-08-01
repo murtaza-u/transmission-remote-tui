@@ -144,7 +144,15 @@ func (tw *torrentWid) verify(s *core.Session) {
 
 func (tw *torrentWid) setKeys(s *core.Session) {
 	tw.widget.SetInputCapture(func(e *tcell.EventKey) *tcell.EventKey {
-		switch e.Rune() {
+		key := e.Rune()
+		row, _ := tw.widget.GetSelection()
+		count := tw.widget.GetRowCount()
+
+		if key != 'q' && (count == 1 || count == row) {
+			return e
+		}
+
+		switch key {
 		case 'g':
 			tw.widget.Select(1, 0)
 			tw.widget.ScrollToBeginning()
