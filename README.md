@@ -12,7 +12,7 @@
 * `trt` is available in the `AUR` (packaged by the developer himself)
 
 ```bash
-$ yay -S transmission-remote-tui-git
+yay -S transmission-remote-tui-git
 ```
 
 ### From source
@@ -38,10 +38,16 @@ transmission-daemon &
 trt --url http://203.12.65.10:9091/transmission/rpc
 ```
 
-* Authentication
+* Authenticate, if required
 
 ```bash
 trt --username <username> --password <password>
+```
+
+* Version
+
+```bash
+trt --version
 ```
 
 * Navigation
