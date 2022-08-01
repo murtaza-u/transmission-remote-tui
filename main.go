@@ -1,6 +1,7 @@
 package main
 
 import (
+	"fmt"
 	"log"
 	"os"
 	"strings"
@@ -10,9 +11,16 @@ import (
 	"github.com/murtaza-u/trt/tui"
 )
 
+const version = "1.0"
+
 func main() {
 	f := new(cli.Flags)
 	f.Parse()
+
+	if f.Version {
+		fmt.Println(version)
+		return
+	}
 
 	if !strings.HasPrefix(f.URL, "http") {
 		f.URL = "http://" + f.URL
