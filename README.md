@@ -1,72 +1,77 @@
-# Transmission Remote TUI (trt)
+# Transmission Remote TUI (`trt`)
+
 > A TUI for BitTorrent client transmission
 
-
-![torrent list](assets/torrents.png)
-
-![peers](assets/peers.png)
-
-![overview](assets/overview.png)
-<figcaption align = "center"><b><sup>**</sup>Yes! I am torrenting linux/bsd iso to evade legal issues</b></figcaption>
+![torrent list](./look/torrents.jpg)
+![files](./look/details.jpg)
 
 ## Installation
 
-#### Arch Linux
-- `trt` is available in the AUR(packaged by the developer himself)
+### Arch Linux
+
+* `trt` is available in the `AUR` (packaged by the developer himself)
+
 ```bash
-$ yay -S transmission-remote-tui-git
+yay -S transmission-remote-tui-git
 ```
 
-#### From source
-- Build dependencies: `go`
+### From source
+
+* Build dependencies: `go`
 
 ```bash
-$ git clone https://github.com/Murtaza-Udaipurwala/transmission-remote-tui
-$ cd transmission-remote-tui
-$ make
-$ sudo make clean install
+make && sudo make install clean
 ```
 
 ## Usage
-- The actual binary is called `trt`
 
-- Transmission daemon must be running
+* The actual binary is called `trt`
+* Transmission daemon must be running
+
 ```bash
-$ transmission-daemon &
+transmission-daemon &
 ```
 
-- In case you have changed the default transmission rpc port(9091), specify the new port
+* Remote `RPC` URL
+
 ```bash
-$ trt --port <new port>
+trt --url http://203.12.65.10:9091/transmission/rpc
 ```
 
-- In case you enabled authentication, specify the username and password
+* Authenticate, if required
+
 ```bash
-$ trt --username <username> --password <password>
+trt --username <username> --password <password>
 ```
 
-- Navigation
+* Version
 
-| keybinding | Action                                      |
-|------------|---------------------------------------------|
-| h, j, k, l | move around                                 |
-| g          | scroll the to top of the page               |
-| G          | scroll the to bottom of the page            |
-| q          | quit / go back                              |
-| Q          | kill the transmission daemon                |
-| l, enter   | show more details about a torrent           |
-| K          | move torrent up the queue                   |
-| J          | move torrent down the queue                 |
-| U          | move torrent at the top of the queue        |
-| D          | move torrent at the bottom of the queue     |
-| p          | pause/start torrent                         |
-| r          | remove torrent                              |
-| R          | remove torrent and delete all the files     |
-| v          | verify torrent                              |
-| t          | ask trackers for more peers                 |
-| m          | copy magnet link to clipboard               |
+```bash
+trt --version
+```
 
-- Changing file's priority
+* Navigation
+
+| keybinding | Action                                             |
+|------------|----------------------------------------------------|
+| h, j, k, l | move around                                        |
+| g          | scroll to the top of the page                      |
+| G          | scroll to the bottom of the page                   |
+| q          | quit / go back                                     |
+| Q          | kill the transmission daemon                       |
+| l, enter   | show more details about a torrent                  |
+| K          | move torrent up the queue                          |
+| J          | move torrent down the queue                        |
+| U          | move torrent at the top of the queue               |
+| D          | move torrent at the bottom of the queue            |
+| p          | pause/start torrent                                |
+| r          | remove torrent                                     |
+| R          | remove torrent and delete corresponding local data |
+| v          | verify torrent                                     |
+| t          | ask trackers for more peers                        |
+| m          | copy magnet link to clipboard                      |
+
+* Changing file's priority
 
 | keybinding | Action                                      |
 |------------|---------------------------------------------|
@@ -80,57 +85,33 @@ $ trt --username <username> --password <password>
 | N          | change priority of all files to 'normal'    |
 | H          | change priority of all files to 'high'      |
 
-## Uninstalling
+## Uninstall
+
 ```bash
-$ sudo make uninstall
+sudo make uninstall
 ```
 
 ## Further reading
 
-### Setting up mimeapp entry
-- `trt` does not have the ability to read/add torrent files/magnet
-  links(however, it can be added rather easily). This is because you don't
-  really need this feature.
+* `trt` does not have the ability to read new torrent files/magnet links.
+  Use [transmission-remote](https://linux.die.net/man/1/transmission-remote)
+  for that.
 
-- Simply create a mimeapp entry, telling it what to do when it finds a torrent file/magnet link
-```bash
-# File: ~/.config/mimeapps.list
-# xdg-open will use these settings to determine how to open filetypes.
+* Adding `mimeapp` entry
 
-[Default Applications]
-
-# These .desktop entries can also be seen and changed in ~/.local/share/applications/
-x-scheme-handler/magnet=torrent.desktop;
-application/x-bittorrent=torrent.desktop;
-```
-
-- Now we must create torrent.desktop file under `~/.local/share/applications/`
 ```bash
 # File: ~/.local/share/applications/torrent.desktop
 
 [Desktop Entry]
 Type=Application
 Name=Torrent
-Exec=/usr/bin/env transadd %U
+Exec=/usr/bin/env transmission-remote -a %U
 ```
 
-- `transadd` is a shell script in my `PATH`. This is the script that tells
-  `transmission daemon` to add our torrent
 ```bash
-#!/bin/sh
+# File: ~/.config/mimeapps.list
 
-# Mimeapp script for adding torrent to transmission-daemon, but will also start
-# the daemon first if not running.  transmission-daemon sometimes fails to take
-# remote requests in its first moments, hence the sleep.
-
-pidof transmission-daemon >/dev/null || transmission-daemon &
-sleep 3
-# notify-send "🔽 Adding Torrent"
-exec transmission-remote -a "$@"
+[Default Applications]
+x-scheme-handler/magnet=torrent.desktop;
+application/x-bittorrent=torrent.desktop;
 ```
-
-[Video tutorial on setting up mimeapp entry](https://odysee.com/@Luke:7/torrenting-setup-with-transmission:1)(the TUI program used is `transmission-remote-cli` instead of `trt`)
-
-
-#### All pull requests are welcomed
-#### Open issues for discussion/bug report
